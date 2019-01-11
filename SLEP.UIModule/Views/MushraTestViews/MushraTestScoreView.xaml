@@ -1,0 +1,208 @@
+﻿<UserControl x:Class="SLEP.UIModule.Views.MUSHRATestViews.MushraTestScoreView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SLEP.UIModule.Views.MUSHRATestViews"
+             mc:Ignorable="d" 
+            Height="377.858" Width="644.273" Background="White">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary  Source="pack://application:,,,/SLEP.UIModule;component/Resources/SingleTickSliderStyles.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/SLEP.UIModule;component/Resources/ButtonStyles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <Image x:Key="APlaying" Source="pack://application:,,,/SLEP.UIModule;component/Views/Images/ic_A-MUSH_Blue.png" />
+            <Image x:Key="A" Source="pack://application:,,,/SLEP.UIModule;component/Views/Images/ic_A-MUSH_grey.png" />
+            
+            <Image x:Key="BPlaying" Source="pack://application:,,,/SLEP.UIModule;component/Views/Images/ic_B-MUSH_Blue.png" />
+            <Image x:Key="B" Source="pack://application:,,,/SLEP.UIModule;component/Views/Images/ic_B-MUSH_grey.png" />
+            
+            <Image x:Key="CPlaying" Source="pack://application:,,,/SLEP.UIModule;component/Views/Images/ic_C-MUSH_Blue.png" />
+            <Image x:Key="C" Source="pack://application:,,,/SLEP.UIModule;component/Views/Images/ic_C-MUSH_grey.png" />
+            
+            <Image x:Key="DPlaying" Source="pack://application:,,,/SLEP.UIModule;component/Views/Images/ic_D-MUSH_Blue.png" />
+            <Image x:Key="D" Source="pack://application:,,,/SLEP.UIModule;component/Views/Images/ic_D-MUSH_grey.png" />
+            
+            <Image x:Key="EPlaying" Source="pack://application:,,,/SLEP.UIModule;component/Views/Images/ic_E-MUSH_Blue.png" />
+            <Image x:Key="E" Source="pack://application:,,,/SLEP.UIModule;component/Views/Images/ic_E-MUSH_grey.png" />
+            
+            <Image x:Key="FPlaying" Source="pack://application:,,,/SLEP.UIModule;component/Views/Images/ic_F-MUSH_Blue.png" />
+            <Image x:Key="F" Source="pack://application:,,,/SLEP.UIModule;component/Views/Images/ic_F-MUSH_grey.png" />
+            
+            <Image x:Key="GPlaying" Source="pack://application:,,,/SLEP.UIModule;component/Views/Images/ic_G-MUSH_Blue.png" />
+            <Image x:Key="G" Source="pack://application:,,,/SLEP.UIModule;component/Views/Images/ic_G-MUSH_grey.png" />
+            
+            <Image x:Key="HPlaying" Source="pack://application:,,,/SLEP.UIModule;component/Views/Images/ic_H-MUSH_Blue.png" />
+            <Image x:Key="H" Source="pack://application:,,,/SLEP.UIModule;component/Views/Images/ic_H-MUSH_grey.png" />
+            
+            <Image x:Key="IPlaying" Source="pack://application:,,,/SLEP.UIModule;component/Views/Images/ic_I-MUSH_Blue.png" />
+            <Image x:Key="I" Source="pack://application:,,,/SLEP.UIModule;component/Views/Images/ic_I-MUSH_grey.png" />
+            <Image x:Key="JPlaying" Source="pack://application:,,,/SLEP.UIModule;component/Views/Images/ic_J-MUSH_Blue.png" />
+            <Image x:Key="J" Source="pack://application:,,,/SLEP.UIModule;component/Views/Images/ic_J-MUSH_grey.png" />
+            <Image x:Key="KPlaying" Source="pack://application:,,,/SLEP.UIModule;component/Views/Images/ic_K-MUSH_Blue.png" />
+            <Image x:Key="K" Source="pack://application:,,,/SLEP.UIModule;component/Views/Images/ic_K-MUSH_grey.png" />
+            <Image x:Key="LPlaying" Source="pack://application:,,,/SLEP.UIModule;component/Views/Images/ic_L-MUSH_Blue.png" />
+            <Image x:Key="L" Source="pack://application:,,,/SLEP.UIModule;component/Views/Images/ic_L-MUSH_grey.png" />
+        </ResourceDictionary>
+
+        <!--Template="{StaticResource SingleTickWithLabels}"-->
+    </UserControl.Resources>
+    <Grid Height="307" VerticalAlignment="Top" HorizontalAlignment="Left" Width="658">
+
+        <Slider x:Name="sliderA"  Template="{StaticResource SingleTickWithLabels}" Margin="58,136,0,0" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Left" Width="206" Height="26" VerticalAlignment="Top" ValueChanged="slider_ValueChanged">
+            <Slider.RenderTransform>
+                <TransformGroup>
+                    <RotateTransform Angle="-90.0"/>
+                </TransformGroup>
+            </Slider.RenderTransform>
+        </Slider>
+
+        <Slider x:Name="sliderB" Template="{StaticResource SingleTickNoLabels}" Margin="93,136,0,0" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Left" Width="206" Height="26" VerticalAlignment="Top" ValueChanged="slider_ValueChanged">
+            <Slider.RenderTransform>
+                <TransformGroup>
+                    <RotateTransform Angle="-90.0"/>
+                </TransformGroup>
+            </Slider.RenderTransform>
+        </Slider>
+        <Slider x:Name="sliderC" Template="{StaticResource SingleTickNoLabels}"  Margin="127,134,0,0" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Left" Width="206" Height="26" VerticalAlignment="Top" ValueChanged="slider_ValueChanged">
+            <Slider.RenderTransform>
+                <TransformGroup>
+                    <RotateTransform Angle="-90.0"/>
+                </TransformGroup>
+            </Slider.RenderTransform>
+        </Slider>
+        <Slider x:Name="sliderD" Template="{StaticResource SingleTickNoLabels}" Margin="165,136,0,0" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Left" Width="206" Height="26" VerticalAlignment="Top" ValueChanged="slider_ValueChanged">
+            <Slider.RenderTransform>
+                <TransformGroup>
+                    <RotateTransform Angle="-90.0"/>
+                </TransformGroup>
+            </Slider.RenderTransform>
+        </Slider>
+        <Slider x:Name="sliderE" Template="{StaticResource SingleTickNoLabels}" Margin="198,136,0,0" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Left" Width="206" Height="26" VerticalAlignment="Top" ValueChanged="slider_ValueChanged">
+            <Slider.RenderTransform>
+                <TransformGroup>
+                    <RotateTransform Angle="-90.0"/>
+                </TransformGroup>
+            </Slider.RenderTransform>
+        </Slider>
+        <Slider x:Name="sliderF" Template="{StaticResource SingleTickNoLabels}" Margin="233,136,0,0" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Left" Width="206" Height="26" VerticalAlignment="Top" ValueChanged="slider_ValueChanged">
+            <Slider.RenderTransform>
+                <TransformGroup>
+                    <RotateTransform Angle="-90.0"/>
+                </TransformGroup>
+            </Slider.RenderTransform>
+        </Slider>
+        <Slider x:Name="sliderG" Template="{StaticResource SingleTickNoLabels}" Margin="270,136,0,0" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Left" Width="206" Height="26" VerticalAlignment="Top" ValueChanged="slider_ValueChanged">
+            <Slider.RenderTransform>
+                <TransformGroup>
+                    <RotateTransform Angle="-90.0"/>
+                </TransformGroup>
+            </Slider.RenderTransform>
+        </Slider>
+        <Slider x:Name="sliderH" Template="{StaticResource SingleTickNoLabels}" Margin="307,136,0,0" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Left" Width="206" Height="26" VerticalAlignment="Top" ValueChanged="slider_ValueChanged">
+            <Slider.RenderTransform>
+                <TransformGroup>
+                    <RotateTransform Angle="-90.0"/>
+                </TransformGroup>
+            </Slider.RenderTransform>
+        </Slider>
+        <Slider x:Name="sliderI" Template="{StaticResource SingleTickNoLabels}" Margin="344,136,0,0" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Left" Width="206" Height="26" VerticalAlignment="Top" ValueChanged="slider_ValueChanged">
+            <Slider.RenderTransform>
+                <TransformGroup>
+                    <RotateTransform Angle="-90.0"/>
+                </TransformGroup>
+            </Slider.RenderTransform>
+        </Slider>
+        <Slider x:Name="sliderJ" Template="{StaticResource SingleTickNoLabels}" Margin="381,136,0,0" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Left" Width="206" Height="26" VerticalAlignment="Top" ValueChanged="slider_ValueChanged">
+            <Slider.RenderTransform>
+                <TransformGroup>
+                    <RotateTransform Angle="-90.0"/>
+                </TransformGroup>
+            </Slider.RenderTransform>
+        </Slider>
+        <Slider x:Name="sliderK" Template="{StaticResource SingleTickNoLabels}" Margin="416,136,0,0" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Left" Width="206" Height="26" VerticalAlignment="Top" ValueChanged="slider_ValueChanged">
+            <Slider.RenderTransform>
+                <TransformGroup>
+                    <RotateTransform Angle="-90.0"/>
+                </TransformGroup>
+            </Slider.RenderTransform>
+        </Slider>
+        <Slider x:Name="sliderL" Template="{StaticResource SingleTickNoLabels}" Margin="451,137,0,0" RenderTransformOrigin="0.5,0.5" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="206" ValueChanged="slider_ValueChanged">
+            <Slider.RenderTransform>
+                <TransformGroup>
+                    <RotateTransform Angle="-90.0"/>
+                </TransformGroup>
+            </Slider.RenderTransform>
+        </Slider>
+
+        <Button x:Name="ABtn" HorizontalAlignment="Left" Margin="147,269,0,0"  VerticalAlignment="Top" Width="31" Height="30" Click="OnMushraStimulus_Clicked">
+            <StackPanel>
+                <Image Source="pack://application:,,,/SLEP.UIModule;component/Views/Images/ic_A-MUSH_Grey.png" Height="22" />
+            </StackPanel>
+        </Button>
+        <Button x:Name="BBtn" HorizontalAlignment="Left" Margin="183,269,0,0" Width="31" Height="30" VerticalAlignment="Top" Click="OnMushraStimulus_Clicked">
+            <StackPanel>
+                <Image Source="pack://application:,,,/SLEP.UIModule;component/Views/Images/ic_B-MUSH_Grey.png" Height="22" />
+            </StackPanel>
+        </Button>
+        <Button x:Name="CBtn" HorizontalAlignment="Left" Margin="219,269,0,0" Width="31" Height="30" VerticalAlignment="Top" Click="OnMushraStimulus_Clicked">
+            <StackPanel>
+                <Image Source="pack://application:,,,/SLEP.UIModule;component/Views/Images/ic_C-MUSH_Grey.png" Height="22" />
+            </StackPanel>
+        </Button>
+        <Button x:Name="DBtn" HorizontalAlignment="Left" Margin="254,269,0,0" Width="31" Height="30" VerticalAlignment="Top" Click="OnMushraStimulus_Clicked">
+            <StackPanel>
+                <Image Source="pack://application:,,,/SLEP.UIModule;component/Views/Images/ic_D-MUSH_Grey.png" Height="22" />
+            </StackPanel>
+        </Button>
+        <Button x:Name="EBtn" HorizontalAlignment="Left" Margin="288,269,0,0" Width="31" Height="30" VerticalAlignment="Top" Click="OnMushraStimulus_Clicked">
+            <StackPanel>
+                <Image Source="pack://application:,,,/SLEP.UIModule;component/Views/Images/ic_E-MUSH_Grey.png" Height="22" />
+            </StackPanel>
+        </Button>
+        <Button x:Name="FBtn" HorizontalAlignment="Left" Margin="324,269,0,0" Width="31" Height="30" VerticalAlignment="Top" Click="OnMushraStimulus_Clicked">
+            <StackPanel>
+                <Image Source="pack://application:,,,/SLEP.UIModule;component/Views/Images/ic_F-MUSH_Grey.png" Height="22" />
+            </StackPanel>
+        </Button>
+        <Button x:Name="GBtn" HorizontalAlignment="Left" Margin="360,269,0,0" Width="31" Height="30" VerticalAlignment="Top" Click="OnMushraStimulus_Clicked">
+            <StackPanel>
+                <Image Source="pack://application:,,,/SLEP.UIModule;component/Views/Images/ic_G-MUSH_Grey.png" Height="22" />
+            </StackPanel>
+        </Button>
+        <Button x:Name="HBtn" HorizontalAlignment="Left" Margin="396,269,0,0" Width="31" Height="30" VerticalAlignment="Top" Click="OnMushraStimulus_Clicked">
+            <StackPanel>
+                <Image Source="pack://application:,,,/SLEP.UIModule;component/Views/Images/ic_H-MUSH_Grey.png" Height="22" />
+            </StackPanel>
+        </Button>
+        <Button x:Name="IBtn" HorizontalAlignment="Left" Margin="432,269,0,0" Width="31" Height="30" VerticalAlignment="Top" Click="OnMushraStimulus_Clicked">
+            <StackPanel>
+                <Image Source="pack://application:,,,/SLEP.UIModule;component/Views/Images/ic_I-MUSH_Grey.png" Height="22" />
+            </StackPanel>
+        </Button>
+        <Button x:Name="JBtn" HorizontalAlignment="Left" Margin="468,269,0,0" Width="31" Height="30" VerticalAlignment="Top" Click="OnMushraStimulus_Clicked">
+            <StackPanel>
+                <Image Source="pack://application:,,,/SLEP.UIModule;component/Views/Images/ic_J-MUSH_Grey.png" Height="22" />
+            </StackPanel>
+        </Button>
+        <Button x:Name="KBtn" HorizontalAlignment="Left" Margin="504,269,0,0" Width="31" Height="30" VerticalAlignment="Top" Click="OnMushraStimulus_Clicked">
+            <StackPanel>
+                <Image Source="pack://application:,,,/SLEP.UIModule;component/Views/Images/ic_K-MUSH_Grey.png" Height="22" />
+            </StackPanel>
+        </Button>
+        <Button x:Name="LBtn" HorizontalAlignment="Left" Margin="540,269,0,0" Width="31" Height="30" VerticalAlignment="Top" Click="OnMushraStimulus_Clicked">
+            <StackPanel>
+                <Image Source="pack://application:,,,/SLEP.UIModule;component/Views/Images/ic_L-MUSH_Grey.png" Height="22" />
+            </StackPanel>
+        </Button>
+        <Label x:Name="label2" Content="" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="-5.763,-1.192" Width="649" 
+            FontFamily="Helvetica Neue" FontWeight="Regular"
+            FontSize="15" Background="#1AB3D6" Foreground="AliceBlue" Margin="-1,0,0,0"/>
+        <Button x:Name="RefBtn" Style="{StaticResource RoundButtonTemplate}" Content="Ref"  HorizontalAlignment="Left" Margin="57,269,0,0" VerticalAlignment="Top" Width="56" Height="30"  
+                Background="#1AB3D6" Foreground="AliceBlue" FontFamily="Helvetica Neue" Click="OnMushraStimulus_Clicked">
+
+        </Button>
+
+    </Grid>
+</UserControl>

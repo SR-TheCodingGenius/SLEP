@@ -1,0 +1,10 @@
+bin/
+obj/
+.vs/
+.localhistory/
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates

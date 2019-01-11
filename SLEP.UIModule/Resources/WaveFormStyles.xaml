@@ -1,0 +1,74 @@
+﻿<ResourceDictionary 
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"  
+    xmlns:local1="clr-namespace:SLEP.WaveDisplay;assembly=SLEP.WaveDisplay">
+
+
+    <!-- Region: WaveformTimeline -->
+    <LinearGradientBrush x:Key="WaveformRightLevelBrush"
+                         EndPoint="1,1"
+                         StartPoint="1,0">
+        <GradientStop Color="White"
+                      Offset="0" />
+        <GradientStop Color="White"
+                      Offset="2" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="WaveformLeftLevelBrush"
+                         EndPoint="1,0"
+                         StartPoint="1,1">
+        <GradientStop Color="#3B6A97"
+                      Offset="0" />
+        <GradientStop Color="#39A9FF"
+                      Offset="1" />
+    </LinearGradientBrush>
+    <Style x:Key="WaveFormStyle" TargetType="{x:Type local1:WaveformTimeline}">
+        <Setter Property="RepeatRegionBrush"
+                Value="#2500FF06" />
+        <Setter Property="TimelineTickBrush"
+                Value="#393939" />
+        <Setter Property="ProgressBarBrush"
+                Value="Red" />
+        <Setter Property="CenterLineBrush"
+                Value="#8A8A8A" />
+        <Setter Property="RightLevelBrush"
+                Value="{StaticResource WaveformRightLevelBrush}" />
+        <Setter Property="LeftLevelBrush"
+                Value="{StaticResource WaveformLeftLevelBrush}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local1:WaveformTimeline}">
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="20" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <Canvas Name="PART_Waveform"
+                                    Grid.Row="1"
+                                    ClipToBounds="True" />
+                            <Border BorderBrush="{TemplateBinding TimelineTickBrush}"
+                                    Grid.Row="0"
+                                    BorderThickness="0,0,0,1"
+                                    Panel.ZIndex="0">
+                                <Canvas Name="PART_Timeline"
+                                        ClipToBounds="True"
+                                        Height="20" />
+                            </Border>
+                            <Canvas Name="PART_Repeat"
+                                    Grid.Row="1"
+                                    ClipToBounds="True" />
+                            <Canvas Name="PART_Progress"
+                                    Grid.Row="0"
+                                    Grid.RowSpan="2"
+                                    ClipToBounds="True" />
+                        </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <!-- EndRegion: WaveformTimeline -->
+
+</ResourceDictionary>

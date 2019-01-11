@@ -1,0 +1,40 @@
+﻿<UserControl x:Class="SLEP.UIModule.Views.ScoringScales"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SLEP.UIModule.Views"
+             xmlns:code ="clr-namespace:SLEP.UIModule.Resources"
+             mc:Ignorable="d" 
+            Height="377.858" Width="300" Background="White">
+
+    <UserControl.Resources>
+        <ResourceDictionary  Source="pack://application:,,,/SLEP.UIModule;component/Resources/SliderStyles.xaml"/>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition  Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Label x:Name="label2" Content="" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="-5.763,-1.192" Width="703" 
+                FontFamily="Helvetica Neue" FontWeight="Regular"
+                FontSize="15" Background="#1AB3D6" Foreground="AliceBlue" Grid.ColumnSpan="2"/>
+        <Label x:Name="label" Content="SCORE" HorizontalAlignment="Left" Margin="51,57,0,0" VerticalAlignment="Top" Width="71" Foreground="#1AB3D6" Height="43"/>
+        <RadioButton x:Name="BBtn" Content="B" HorizontalAlignment="Left" Margin="172,62,0,0" VerticalAlignment="Top" Foreground="#1AB3D6" Height="26" Width="28" IsEnabled="False"/>
+        <RadioButton x:Name="CBtn" Content="C" HorizontalAlignment="Left" Margin="230,62,0,0" VerticalAlignment="Top" Width="35" RenderTransformOrigin="1.727,0.466" Foreground="#1AB3D6" Height="26" IsEnabled="False"/>
+        <Label x:Name="label1" Content="Select Target Score" HorizontalAlignment="Left" Margin="20,24,0,0" VerticalAlignment="Top" Width="134" Height="43"/>
+       
+        <Slider x:Name="ScoreSlider"  Template="{StaticResource VerticalSlider}" HorizontalAlignment="Left" Margin="50,177,0,0" VerticalAlignment="Top" Width="236" 
+                 RenderTransformOrigin="0.5,0.5" ValueChanged="ScoreChanged" Height="80" IsEnabled="False">
+            <Slider.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform Angle="270"/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </Slider.RenderTransform>
+        </Slider>
+       
+    </Grid>
+</UserControl>

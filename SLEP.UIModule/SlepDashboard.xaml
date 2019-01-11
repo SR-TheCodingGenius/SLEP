@@ -1,0 +1,58 @@
+﻿<UserControl x:Class="SLEP.UIModule.SlepDashboard"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SLEP.UIModule"
+             mc:Ignorable="d" 
+            Height="501.602" Width="855.611" 
+             x:Name="Dashboard" Loaded="Dashboard_Loaded"  Unloaded="Dashboard_Unloaded">
+    <UserControl.Resources>
+        <ResourceDictionary Source="Resources/ButtonStyles.xaml"/>
+     
+    </UserControl.Resources>
+    <UserControl.Triggers>
+        <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+			<BeginStoryboard Storyboard="{StaticResource InTransition}"/>
+		</EventTrigger>
+    </UserControl.Triggers>
+
+    <Grid  HorizontalAlignment="Left" Width="580" x:Name="ContentGrid">
+        <Grid.RenderTransform>
+            <TransformGroup>
+                <ScaleTransform/>
+                <SkewTransform/>
+                <RotateTransform />
+                <TranslateTransform/>
+            </TransformGroup>
+        </Grid.RenderTransform>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="71*"/>
+            <ColumnDefinition Width="45*"/>
+            <ColumnDefinition Width="0*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0*"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <Button x:Name="NewSession" Content="New Session" Style="{StaticResource RoundButtonTemplate}" HorizontalAlignment="Left" Margin="10,235,0,0" VerticalAlignment="Top" Width="122" Height="53" 
+                RenderTransformOrigin="0.149,0.677" Grid.RowSpan="2" Click="NewSession_Click" Background="#1AB3D6" Foreground="AliceBlue" FontFamily="Helvetica Neue" FontSize="15" FontWeight="Regular"/>
+
+        <Button x:Name="OpenSession" Content="Open Session" Style="{StaticResource RoundButtonTemplate}" HorizontalAlignment="Left" Margin="10,302,0,0" VerticalAlignment="Top" Width="201" Height="53"
+                Grid.RowSpan="2" Click="OpenSession_Click" Background="#1AB3D6" Foreground="AliceBlue" FontFamily="Helvetica Neue" FontSize="15" FontWeight="Regular"/>
+
+        <Label x:Name="label" Content="Recent Sessions" HorizontalAlignment="Left" Margin="7,6,0,0" VerticalAlignment="Top" Grid.RowSpan="2" Height="26" Width="94"/>
+        <Button x:Name="ABCSessionBtn" Content="ABC Session" Style="{StaticResource LinkButtonTemplate}" HorizontalAlignment="Left" Margin="243,236,0,0" Grid.RowSpan="2" VerticalAlignment="Top" Width="93" 
+                RenderTransformOrigin="-0.119,0.147" Visibility="Hidden" Click="ABCSessionBtn_Click"/>
+        <Button x:Name="MushraSessionBtn" Content="Mushra Session"  Style="{StaticResource LinkButtonTemplate}" HorizontalAlignment="Left" Margin="243,275,0,0" Grid.RowSpan="2" VerticalAlignment="Top" Width="93" 
+                RenderTransformOrigin="-0.119,0.147" Visibility="Hidden" />
+        <Button x:Name="ABXSessionBtn" Content="ABX Session"  Style="{StaticResource LinkButtonTemplate}" HorizontalAlignment="Left" Margin="243,312,0,0" Grid.RowSpan="2" VerticalAlignment="Top" Width="93" 
+                RenderTransformOrigin="-0.119,0.147" Visibility="Hidden"/>
+        <DataGrid x:Name="dataGrid" HorizontalAlignment="Left" Margin="7,37,0,0" Grid.RowSpan="2" VerticalAlignment="Top" RowHeight="35" ColumnWidth="100"  CanUserResizeColumns="False" CanUserReorderColumns="False"
+                  CanUserResizeRows="False" AreRowDetailsFrozen="True"  IsReadOnly="True" Background="LightGray" RowBackground="LightYellow" AlternatingRowBackground="LightBlue"
+                  RenderTransformOrigin="-14.585,-0.78" Width="471" Height="167" Grid.ColumnSpan="2"/>
+
+    </Grid>
+
+</UserControl>

@@ -1,0 +1,252 @@
+﻿<ResourceDictionary 
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"  
+    xmlns:local="clr-namespace:SLEP.UIModule.Resources">
+    
+
+    <!-- SimpleStyles: Slider -->
+    <Style x:Key="SliderButtonStyle" TargetType="{x:Type RepeatButton}">
+        <Setter Property="SnapsToDevicePixels" Value="true"/>
+        <Setter Property="OverridesDefaultStyle" Value="true"/>
+        <Setter Property="IsTabStop" Value="false"/>
+        <Setter Property="Focusable" Value="false"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type RepeatButton}">
+                    <Border Background="Transparent" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="SliderThumbStyle" TargetType="{x:Type Thumb}">
+        <Setter Property="SnapsToDevicePixels" Value="true"/>
+        <Setter Property="OverridesDefaultStyle" Value="true"/>
+        <Setter Property="Height" Value="14"/>
+        <Setter Property="Width" Value="14"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Thumb}">
+                    <Ellipse 
+            Name="Ellipse" 
+            Fill="{DynamicResource BackgroundLight}"
+            Stroke="{DynamicResource StrokeBrush}"
+            StrokeThickness="1" />
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Fill" TargetName="Ellipse" Value="{DynamicResource GlowBrush}"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="false">
+                            <Setter Property="Stroke" TargetName="Ellipse" Value="{x:Null}"/>
+                            <Setter Property="Fill" TargetName="Ellipse" Value="{DynamicResource DisabledBorderBrush}"/>
+                        </Trigger>
+                        
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <LinearGradientBrush x:Key="WhiteBackground" EndPoint="0.5,1" StartPoint="0.5,0">
+        <GradientStop Color="#FFFFFFFF" Offset="0"/>
+        <GradientStop Color="#FFD8D8D8" Offset="1"/>
+        <GradientStop Color="#FFFFFFFF" Offset="0.504"/>
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="RecBackground" EndPoint="0.5,1" StartPoint="0.5,0">
+        <GradientStop Color="#FF000000" Offset="0"/>
+        <GradientStop Color="#FF2B2B2B" Offset="0.345"/>
+        <GradientStop Color="#FF000000" Offset="1"/>
+        <GradientStop Color="#FF2D2D2D" Offset="0.53"/>
+        <GradientStop Color="#FF232323" Offset="0.68"/>
+    </LinearGradientBrush>
+
+    <RadialGradientBrush x:Key="RoundButtonBackground" GradientOrigin="0.501,0.761">
+        <GradientStop Color="#FF2E619D" Offset="0.522"/>
+        <GradientStop Color="#FF89D4EA" Offset="0"/>
+        <GradientStop Color="#FF002953" Offset="0.871"/>
+        <GradientStop Color="#FF538BCA" Offset="1"/>
+    </RadialGradientBrush>
+
+    <RadialGradientBrush x:Key="RoundButtonOverBackground" GradientOrigin="0.501,0.761">
+        <GradientStop Color="#FF74DCF9" Offset="0"/>
+        <GradientStop Color="#FF2F6297" Offset="0.916"/>
+        <GradientStop Color="#FFC6E1FF" Offset="1"/>
+    </RadialGradientBrush>
+
+    <LinearGradientBrush x:Key="ThemeBackground" EndPoint="0.875,0.937" StartPoint="0.165,0.116">
+        <GradientStop Color="#00FFFFFF" Offset="0"/>
+        <GradientStop Color="#CCC4C4C4" Offset="1"/>
+        <GradientStop Color="#CCFDFEFF" Offset="0.7"/>
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="GrayMetallicBrush" EndPoint="0.875,0.937" StartPoint="0.165,0.116">
+        <GradientStop Color="#CC989898" Offset="0"/>
+        <GradientStop Color="#FFE9E7E7" Offset="0.312"/>
+        <GradientStop Color="#CC7F7F7F" Offset="1"/>
+        <GradientStop Color="#FFDBDBDB" Offset="0.558"/>
+        <GradientStop Color="#CC9A9A9A" Offset="0.768"/>
+        <GradientStop Color="#FFE5E2E2" Offset="0.893"/>
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="GrayBrush" EndPoint="0.5,1" StartPoint="0.5,0">
+        <GradientStop Color="#FFE7E5E5" Offset="0"/>
+        <GradientStop Color="#FF6A6A6A" Offset="0.395"/>
+        <GradientStop Color="#FFCEC9C9" Offset="1"/>
+        <GradientStop Color="#FF818181" Offset="0.53"/>
+        <GradientStop Color="#FF999595" Offset="0.452"/>
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="PTZBackground" EndPoint="0.5,1" StartPoint="0.5,0">
+        <GradientStop Color="#FF2F2F2F" Offset="0"/>
+        <GradientStop Color="#FF999999" Offset="0.395"/>
+        <GradientStop Color="#FF0E0E0E" Offset="1"/>
+        <GradientStop Color="#FF747474" Offset="0.53"/>
+        <GradientStop Color="#FF4B4A4A" Offset="0.452"/>
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="ButtonNormal" EndPoint="0.5,1" StartPoint="0.5,0">
+        <GradientStop Color="#FF2F2F2F" Offset="0"/>
+        <GradientStop Color="#FF999999" Offset="0.395"/>
+        <GradientStop Color="#FF0E0E0E" Offset="1"/>
+        <GradientStop Color="#FF747474" Offset="0.53"/>
+        <GradientStop Color="#FF4B4A4A" Offset="0.452"/>
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="ButtonOver" EndPoint="0.5,1" StartPoint="0.5,0">
+        <GradientStop Color="#FF8AD4F7" Offset="0"/>
+        <GradientStop Color="#FF1296E4" Offset="0.395"/>
+        <GradientStop Color="#FFAFE9FF" Offset="1"/>
+        <GradientStop Color="#FF3D7793" Offset="0.53"/>
+        <GradientStop Color="#FF0B4181" Offset="0.46"/>
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="BackgroundNormal" EndPoint="0.5,1" StartPoint="0.5,0">
+        <GradientStop Color="#FF032D60" Offset="0"/>
+        <GradientStop Color="#FF03346E" Offset="1"/>
+        <GradientStop Color="#FF87B0E4" Offset="0.81"/>
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="BackgroundNormalUpsideDown" EndPoint="0.5,0" StartPoint="0.5,1">
+        <GradientStop Color="#FF032D60" Offset="0"/>
+        <GradientStop Color="#FF03346E" Offset="1"/>
+        <GradientStop Color="#FF87B0E4" Offset="0.81"/>
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="BackgroundNormalVert" EndPoint="1,0.5" StartPoint="0,0.5">
+        <GradientStop Color="#FF032D60" Offset="0"/>
+        <GradientStop Color="#FF03346E" Offset="1"/>
+        <GradientStop Color="#FF87B0E4" Offset="0.81"/>
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="BackgroundLight" EndPoint="0.5,1" StartPoint="0.5,0">
+        <GradientStop Color="#FF115881" Offset="0"/>
+        <GradientStop Color="#FF1949A1" Offset="1"/>
+        <GradientStop Color="#FF79C0FD" Offset="0.61"/>
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="GlowBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#FF1B5E78" Offset="0"/>
+        <GradientStop Color="#FF185668" Offset="1"/>
+        <GradientStop Color="#FF97F1FF" Offset="0.81"/>
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="GlowBrushVert" StartPoint="0,0" EndPoint="1,0">
+        <GradientStop Color="#FF1B5E78" Offset="0"/>
+        <GradientStop Color="#FF185668" Offset="1"/>
+        <GradientStop Color="#FF97F1FF" Offset="0.81"/>
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="PressedBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientBrush.GradientStops>
+            <GradientStopCollection>
+                <GradientStop Color="#FF000000" Offset="0.0"/>
+                <GradientStop Color="#FF124D78" Offset="0.51"/>
+                <GradientStop Color="#FF000000" Offset="1.0"/>
+            </GradientStopCollection>
+        </GradientBrush.GradientStops>
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="PTZPressedBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientBrush.GradientStops>
+            <GradientStopCollection>
+                <GradientStop Color="#FF000000" Offset="0.0"/>
+                <GradientStop Color="#FF124D78" Offset="0.51"/>
+                <GradientStop Color="#FF000000" Offset="1.0"/>
+            </GradientStopCollection>
+        </GradientBrush.GradientStops>
+    </LinearGradientBrush>
+
+    <SolidColorBrush x:Key="GlyphDarkBrush" Color="#FF111112" />
+
+    <SolidColorBrush x:Key="GlyphLightBrush" Color="#FFFFFFFF" />
+
+    <SolidColorBrush x:Key="StrokeBrush" Color="#FF0088D8" />
+
+    <SolidColorBrush x:Key="DisabledForegroundBrush" Color="#888" />
+
+    <SolidColorBrush x:Key="DisabledBorderBrush" Color="#AAA" />
+
+    <LinearGradientBrush x:Key="ShineBrush" EndPoint="0.494,0.889" StartPoint="0.494,0.028">
+        <GradientStop Color="#4C0059DE" Offset="0"/>
+        <GradientStop Color="#66FFFFFF" Offset="1"/>
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="SelectionBrush" EndPoint="1,0.5" StartPoint="0,0.5">
+        <GradientStop Color="#FF02528A" Offset="0"/>
+        <GradientStop Color="#FF7BC5F9" Offset="0.661"/>
+        <GradientStop Color="#FF023F8A" Offset="0.991"/>
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="MouseOverBrush" EndPoint="1,0.5" StartPoint="0,0.5">
+        <GradientStop Color="#FF02528A" Offset="0"/>
+        <GradientStop Color="#FF7BC5F9" Offset="0.661"/>
+        <GradientStop Color="#FF023F8A" Offset="0.991"/>
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="GreyWindowBrush" EndPoint="0.5,1" StartPoint="0.5,0">
+        <GradientStop Color="#FFD3D3D3" Offset="0"/>
+        <GradientStop Color="#FFFFFFFF" Offset="0.527"/>
+        <GradientStop Color="#FFB9B9B9" Offset="0.987"/>
+    </LinearGradientBrush>
+    <RadialGradientBrush x:Key="PlayerButtonBackground">
+        <GradientStop Color="#FF034360" Offset="1"/>
+        <GradientStop Color="#FF81DBF5" Offset="0.188"/>
+    </RadialGradientBrush>
+
+    <ControlTemplate x:Key="VerticalSlider" TargetType="{x:Type Slider}">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto" MinHeight="{TemplateBinding Slider.MinHeight}"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <local:ScoreTickBar x:Name="TopTick" SnapsToDevicePixels="True" Placement="Top" Fill="{TemplateBinding Foreground}" Height="5"  />
+            <TickBar Name="TopTick1" SnapsToDevicePixels="True" Placement="Top" Fill="{TemplateBinding Foreground}" Height="5"  />
+            <Border Name="TrackBackground" Margin="0" CornerRadius="2" Height="4" Grid.Row="1" Background="{StaticResource GlyphLightBrush}" BorderBrush="{StaticResource ButtonNormal}" BorderThickness="1" />
+            <Track Grid.Row="1" Name="PART_Track">
+                <Track.DecreaseRepeatButton>
+                    <RepeatButton Style="{StaticResource SliderButtonStyle}" Command="Slider.DecreaseLarge" />
+                </Track.DecreaseRepeatButton>
+                <Track.Thumb>
+                    <Thumb Style="{StaticResource SliderThumbStyle}" />
+                </Track.Thumb>
+                <Track.IncreaseRepeatButton>
+                    <RepeatButton Style="{StaticResource SliderButtonStyle}" Command="Slider.IncreaseLarge" />
+                </Track.IncreaseRepeatButton>
+            </Track>
+            <TickBar Name="BottomTick" SnapsToDevicePixels="True" Grid.Row="2" Fill="{TemplateBinding Foreground}" Placement="Bottom" Height="4" Visibility="Visible" />
+        </Grid>
+        <ControlTemplate.Triggers>
+            <Trigger Property="TickPlacement" Value="TopLeft">
+                <!--<Setter TargetName="TopTick" Property="Visibility" Value="Visible"/>-->
+            </Trigger>
+            <Trigger Property="TickPlacement" Value="BottomRight">
+                <Setter TargetName="BottomTick" Property="Visibility" Value="Visible"/>
+            </Trigger>
+            <Trigger Property="TickPlacement" Value="Both">
+                <!--<Setter TargetName="TopTick" Property="Visibility" Value="Visible"/>-->
+                <Setter TargetName="BottomTick" Property="Visibility" Value="Visible"/>
+            </Trigger>
+            <Trigger Property="IsSnapToTickEnabled" Value="False"></Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+</ResourceDictionary>

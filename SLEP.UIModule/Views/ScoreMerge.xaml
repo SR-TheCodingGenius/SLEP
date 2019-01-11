@@ -1,0 +1,21 @@
+﻿<UserControl x:Class="SLEP.UIModule.Views.ScoreMerge"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SLEP.UIModule.Views"
+             mc:Ignorable="d" Width="371.001" Height="315.302"  Background="#E4EEF4">
+    <Grid>
+        <ListBox x:Name="FileListBox" HorizontalAlignment="Left" Height="197" Margin="10,85,0,0" VerticalAlignment="Top" Width="269"  Background="#E4EEF4"/>
+        <Button x:Name="BrowseBtn" Content="Browse" HorizontalAlignment="Left" Margin="292,41,0,0" VerticalAlignment="Top" Width="75" Click="BrowseBtn_Click" Background="#1AB3D6" Foreground="AliceBlue"/>
+        <Button x:Name="AddBtn" Content="Add" HorizontalAlignment="Left" Margin="292,108,0,0" VerticalAlignment="Top" Width="75" Click="OnAddClicked" Background="#1AB3D6" Foreground="AliceBlue"/>
+        <Button x:Name="RemoveBtn" Content="Remove" HorizontalAlignment="Left" Margin="292,149,0,0" VerticalAlignment="Top" Width="75" Click="OnRemoveClicked" Background="#1AB3D6" Foreground="AliceBlue"/>
+        <Button x:Name="RemoveAllBtn" Content="Remove All" HorizontalAlignment="Left" Margin="292,194,0,0" VerticalAlignment="Top" Width="75" Click="OnRemoveAllClicked" Background="#1AB3D6" Foreground="AliceBlue"/>
+        <Button x:Name="ViewBtn" Content="View File" HorizontalAlignment="Left" Margin="292,242,0,0" VerticalAlignment="Top" Width="75" Click="OnViewClicked" Background="#1AB3D6" Foreground="AliceBlue"/>
+        <Button x:Name="MergeBtn" Content="Merge" HorizontalAlignment="Left" Margin="110,287,0,0" VerticalAlignment="Top" Width="75" Click="OnMergeClicked" Background="#1AB3D6" Foreground="AliceBlue"/>
+        <Button x:Name="QuitBtn" Content="Quit" HorizontalAlignment="Left" Margin="204,287,0,0" VerticalAlignment="Top" Width="75" Click="OnQuitClicked" Background="#1AB3D6" Foreground="AliceBlue"/>
+        <Label x:Name="label" Content="Output File*" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="82"/>
+        <TextBox x:Name="OutputFileText" HorizontalAlignment="Left" Height="23" Margin="10,41,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="269" Background="#E4EEF4"/>
+
+    </Grid>
+</UserControl>

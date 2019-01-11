@@ -1,0 +1,16 @@
+﻿<UserControl x:Class="SLEP.UIModule.AboutView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SLEP.UIModule"
+             mc:Ignorable="d" Background="#E4EEF4" Height="152.205" Width="450">
+    <Grid Margin="0,0,0,10">
+        <Image x:Name="image" HorizontalAlignment="Left" Height="56" Margin="15,39,0,0" VerticalAlignment="Top" Width="100" Source="pack://application:,,,/SLEP.UIModule;component/Views/Images/SLEP1.png" />
+        <Button x:Name="OKBtn" Content="OK" HorizontalAlignment="Left" Margin="363,118,0,0" VerticalAlignment="Top" Width="75" Foreground="AliceBlue" Background="#1AB3D6" Click="OKBtn_Click" />
+        <Label x:Name="label" Content="Subjective Listening Evaluation Platform" HorizontalAlignment="Left" Margin="124,26,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.132,-0.269" Width="222" />
+        <Label x:Name="label1" Content="Version - SLEP Phase - 1" HorizontalAlignment="Left" Margin="124,52,0,0" VerticalAlignment="Top" Width="144"/>
+        <Label x:Name="label1_Copy" Content="Build Date - 21-December-2018" HorizontalAlignment="Left" Margin="125,83,0,0" VerticalAlignment="Top" Width="178"/>
+
+    </Grid>
+</UserControl>

@@ -1,0 +1,94 @@
+﻿<UserControl x:Class="SLEP.UIModule.Views.ABCSessionWindow"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SLEP.UIModule.Views"
+             mc:Ignorable="d" 
+             x:Name="SessionWindow"
+             Height="380" Width="799.07" >
+
+    <Grid Margin="0,0,0,10">
+
+        <Menu x:Name="AbcSessionMenu"  HorizontalAlignment="Left"  Height="26" VerticalAlignment="Top" Width="798" DockPanel.Dock="Top" Background="#E4EEF4">
+            <MenuItem Header="File">
+                <MenuItem Header="Open" Name="OpenMItem" HorizontalAlignment="Left" Width="158" Background="#E4EEF4" Margin="0,0,-13,0" IsEnabled="False"  Click="OnOpenSessionClicked"/>
+                <!--<MenuItem Header="Save" Name="SaveMItem" HorizontalAlignment="Left" Width="158" Background="#E4EEF4" Margin="0,0,-13,0" IsEnabled="True" Click="OnSaveAsClicked"/>-->
+                <MenuItem Header="Save" HorizontalAlignment="Left" Width="158" Background="#E4EEF4" Margin="0,0,-13,0" Click="OnSaveAsClicked"/>
+                <MenuItem Header="Exit" HorizontalAlignment="Left" Width="158" Background="#E4EEF4" Margin="0,0,-13,0" Click="CancelBtn_Click" />
+            </MenuItem>
+
+            <MenuItem Header="Scramble">
+                <MenuItem Header="Scramble Trials" HorizontalAlignment="Left" Width="180" Background="#E4EEF4" Margin="0,0,-13,0" Click="OnScrambleTrialsClicked"/>
+                <MenuItem Header="Scramble Samples" HorizontalAlignment="Left" Width="186" Background="#E4EEF4" Margin="0,0,-13,0" Click="OnScrambleSamplesClicked"/>
+            </MenuItem>
+        </Menu>
+        <DataGrid x:Name="SessionGrid"  Margin="4,66,0,0" VerticalAlignment="Top" CanUserResizeColumns="True" CanUserReorderColumns="False" ItemsSource="{Binding ABCSessionModel, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                  CanUserResizeRows="False" AreRowDetailsFrozen="True"  IsReadOnly="True" Background="#E4EEF4" RowBackground="#DAE8EF" AlternatingRowBackground="#F0F8FC"
+                  RenderTransformOrigin="-1.653,-1.14" Height="267" Drop="SessionGrid_Drop" AllowDrop="True" CanUserSortColumns="False" HorizontalAlignment="Left" Width="553">
+            <DataGrid.Resources>
+                <Style TargetType="DataGridRow">
+                    <EventSetter Event="MouseDoubleClick" Handler="Row_DblClick"/>
+                    <EventSetter Event="MouseLeftButtonUp" Handler="Row_Click"/>
+                    <EventSetter Event="MouseEnter" Handler="DataGridRow_Enter"/>
+                </Style>
+                <Style TargetType="{x:Type DataGridCell}">
+                    <EventSetter Event="MouseEnter" Handler="MouseEnterOnDataGridCell" />
+                </Style>
+            </DataGrid.Resources>
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Trial Number" IsReadOnly="True" Width="100" Binding="{Binding Path=TrialNumber}" />
+                <DataGridTextColumn Header="Reference" IsReadOnly="True" Width="100" Binding="{Binding Path=Reference}"/>
+                <DataGridTextColumn Header="Sample" IsReadOnly="True" Width="100" Binding="{Binding Path=Sample}"/>
+                <DataGridTextColumn Header="Hidden Reference B/C" IsReadOnly="True" Width="150" Binding="{Binding Path=HiddenReference}"/>
+                <DataGridTextColumn Header="Trial Name" IsReadOnly="True" Width="100" Binding="{Binding  Path=TrialName}"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <Button x:Name="OpenFile"  HorizontalAlignment="Left" Margin="0,26,0,0" VerticalAlignment="Top" Width="42" Height="40" BorderBrush="Transparent" Background="Transparent" Click="OnOpenSessionClicked" IsEnabled="False">
+            <StackPanel>
+                <Image Source="pack://application:,,,/SLEP.UIModule;component/Views/Images/ic_fileOpen.png"/>
+            </StackPanel>
+        </Button>
+
+        <!--<Button x:Name="button1"  HorizontalAlignment="Left" Margin="47,26,0,0" VerticalAlignment="Top" Width="42" Height="40" BorderBrush="Transparent" Background="Transparent">
+            <StackPanel>
+                <Image  Source="pack://application:,,,/SLEP.UIModule;component/Views/Images/ic_newFile.png" Margin="0,0,0,0" />
+            </StackPanel>
+        </Button>-->
+
+        <Button x:Name="SaveBtn"  HorizontalAlignment="Left" Margin="45,26,0,0" VerticalAlignment="Top" Width="42" Height="40" BorderBrush="Transparent" 
+                Background="Transparent" Click="OnSaveAsClicked" IsEnabled="True">
+            <StackPanel>
+                <Image Source="pack://application:,,,/SLEP.UIModule;component/Views/Images/ic_Save.png"/>
+            </StackPanel>
+        </Button>
+
+        <ComboBox x:Name="ScaleList" HorizontalAlignment="Left" Margin="100,39,0,0" VerticalAlignment="Top" Width="234" Background="#E4EEF4" SelectedValuePath="Content">
+            <ComboBoxItem Tag="Scale1" IsSelected="True">5-Point Mushra Scale</ComboBoxItem>
+            <ComboBoxItem Tag="Scale2">5-point [ITU-RBS-1116]</ComboBoxItem>
+            <ComboBoxItem Tag="Scale3">7-point[ITU-RBS.562-3] Scale</ComboBoxItem>
+            <ComboBoxItem Tag="Scale4">Difference-Mode</ComboBoxItem>
+        </ComboBox>
+        <Button x:Name="AddTrial"  HorizontalAlignment="Left" Margin="351,26,0,0" VerticalAlignment="Top" Width="42" Height="40" Click="Addtrial_Click" BorderBrush="Transparent" Background="Transparent">
+            <StackPanel>
+                <Image Source="pack://application:,,,/SLEP.UIModule;component/Views/Images/ic_Add.png" />
+            </StackPanel>
+        </Button>
+        <Button x:Name="CancelBtn" Content="Cancel" HorizontalAlignment="Left" Height="25" Margin="598,340,0,0" VerticalAlignment="Top" Width="92" Click="CancelBtn_Click" Background="#1AB3D6" Foreground="AliceBlue"/>
+        <Button x:Name="OkBtn" Content="OK" HorizontalAlignment="Left" Margin="700,340,0,5" Width="92" Click="OkBtn_Click" Background="#1AB3D6" Foreground="AliceBlue"/>
+        <ListBox x:Name="MediaPool" HorizontalAlignment="Left" Height="227" Margin="561,104,0,0" VerticalAlignment="Top" Width="229" Background="#DAE8EF" 
+                 PreviewMouseLeftButtonDown="MediaPool_PreviewMouseLeftButtonDown"  
+                 PreviewMouseMove="MediaPool_PreviewMouseMove"/>
+
+        <Button x:Name="BrowseBtn" Content="Browse" HorizontalAlignment="Left" Height="25" Margin="689,70,0,0" VerticalAlignment="Top" Width="97" Click="BrowseBtn_Click" Background="#1AB3D6" Foreground="AliceBlue" RenderTransformOrigin="0.527,-8.324"/>
+        <Label x:Name="label" Content="MEDIA POOL" HorizontalAlignment="Left" Margin="564,72,0,0" VerticalAlignment="Top" Width="90"/>
+        <Button x:Name="DeleteTrial"  HorizontalAlignment="Left" Margin="397,26,0,0" VerticalAlignment="Top" Width="42" Height="40" Click="Deletetrial_Click" BorderBrush="Transparent" Background="Transparent">
+            <StackPanel>
+                <Image Source="pack://application:,,,/SLEP.UIModule;component/Views/Images/ic_Delete.png" />
+            </StackPanel>
+        </Button>
+
+    </Grid>
+
+</UserControl>
