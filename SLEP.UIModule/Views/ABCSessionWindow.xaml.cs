@@ -595,11 +595,20 @@ namespace SLEP.UIModule.Views
 			}
 		}
 
-		List<string> filesWithFullPath = null;
+		List<string> filesWithFullPath = new List<string>();
 		private void BrowseBtn_Click(object sender, RoutedEventArgs e)
 		{
 			var fileDialogObject = new Microsoft.Win32.OpenFileDialog();
-			filesWithFullPath = fileDialogObject.BrowseMultipleFilesToOpen("Audio Files|*.wav").ToList();
+			var fullPathList = fileDialogObject.BrowseMultipleFilesToOpen("Audio Files|*.wav").ToList();
+
+			fullPathList.ForEach(file => 
+			{
+				if (filesWithFullPath.Contains(file) == false)
+				{
+					filesWithFullPath.Add(file);
+				}
+			});
+
 			var fileNameList = fileDialogObject.SafeFileNames.ToList();
 
 			if (fileNameList?.Count > 0)
@@ -752,11 +761,18 @@ namespace SLEP.UIModule.Views
 			var list = sessCollection.Cast<ABCSessionModel>().Select(sess => sess).ToList();
 
 			var randomObj = new Random();
-			
-			sessCollection = list.OrderBy(item => randomObj.Next(_trialNumber + 1));
-           _abcSessionList.OrderBy(item => randomObj.Next(_trialNumber + 1)).ToList();
-            SessionGrid.Items.Clear();
 
+			var listA = list.ToList();
+			var listB = _abcSessionList.ToList();
+
+			var zippedList = listA.Zip(listB, (a, b) => new { a, b }).ToList();
+			zippedList = zippedList.OrderBy(item => randomObj.Next(_trialNumber)).ToList();
+
+			list = zippedList.Select(pair => pair.a).ToList();
+			_abcSessionList = zippedList.Select(pair => pair.b).ToList();
+			sessCollection = list;
+
+			SessionGrid.Items.Clear();
 			foreach (var item in sessCollection)
 			{
 				SessionGrid.Items.Add(item);

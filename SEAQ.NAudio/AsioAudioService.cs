@@ -240,12 +240,26 @@ namespace SLEP.Audio
 			ISampleProvider copyofSampleProvider = null;
 			wavePlayer._reader.Seek(0, SeekOrigin.Begin);
 			var sampleProvider = wavePlayer._reader.ToSampleProvider();
+
 			var fadeSampleCount = (int)((crossfadeDuration * wavePlayer._reader.WaveFormat.SampleRate) / 1000);
 			copyofSampleProvider = sampleProvider.Skip(TimeSpan.FromSeconds(selectbegintime));
-			copyofSampleProvider.Read(DelayFadeOutSampleProvider._copyofNotPlayingSammplesCapture, 0, fadeSampleCount);
+
+			var readCount = fadeSampleCount > DelayFadeOutSampleProvider._copyofNotPlayingSammplesCapture.Length ? fadeSampleCount :
+				DelayFadeOutSampleProvider._copyofNotPlayingSammplesCapture.Length;
+			
+			copyofSampleProvider.Read(DelayFadeOutSampleProvider._copyofNotPlayingSammplesCapture, 0, readCount);
+
+			CopyofSampleProvider(wavePlayer, selectbegintime);
 
 			DelayFadeOutSampleProvider._regionEndTimeInMillis = selectendTime * 1000;
 			DelayFadeOutSampleProvider._regionStartTimeInMillis = selectbegintime * 1000;
+		}
+
+		public void CopyofSampleProvider(WavePlayer wavePlayer, float selectbegintime)
+		{
+			wavePlayer._reader.Seek(0, SeekOrigin.Begin);
+			var xx = wavePlayer._reader.ToSampleProvider();
+			DelayFadeOutSampleProvider._copyofnonplayingsourceprovider = xx.Skip(TimeSpan.FromSeconds(selectbegintime));
 		}
 
 		public void UpdateSelectionTimesonMouseClicks(float selectbegintime, float selectendtime)
@@ -259,6 +273,8 @@ namespace SLEP.Audio
 			var fadeoutObject = RemoveAddStreamsFromMixer(fadeout);
 			fadeoutObject.BeginFadeOutOnMouseClicksAndPause(2, time);
 		}
+
+		
 	}
 
 	

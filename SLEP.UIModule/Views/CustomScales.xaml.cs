@@ -190,18 +190,19 @@ namespace SLEP.UIModule.Views
                 }
 
                 flag = _customComments.Where(textBox => textBox.IsEnabled == true).All(comment =>
-           {
-               if (comment.Text != "")
-               {
-                   return true;
-               }
-               else
-               {
-                   MessageBox.Show("All Editable Fields are Mandatory!!!!\n They can't have blank or duplicates", "Error", MessageBoxButton.OK, MessageBoxImage.Asterisk);
-                   return false;
-               }
+						{
+							if (comment.Text != "")
+							{
+								return true;
+							}
+							else
+							{
+								MessageBox.Show("All Editable Fields are Mandatory!!!!\n They can't have blank or duplicates",
+									"Error", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+								return false;
+							}
 
-           });
+						});
             }
 
             var enabledTextBoxesCount = _customComments.Where(textBox => textBox.IsEnabled == true).Count();
@@ -243,9 +244,9 @@ namespace SLEP.UIModule.Views
                 FillDataFromControlsToBuffers();
                 var scaleName = _customScaleProperties.ScaleName;
                 ScaleLBox.Items.Add(scaleName);
-                _addToListClicked = true;
                 ClearFields();
-            }
+				_addToListClicked = true;
+			}
         }
 
         private void FillDataFromControlsToBuffers()
@@ -372,7 +373,6 @@ namespace SLEP.UIModule.Views
                 Range1.IsChecked = false;
                 Range2.IsChecked = false;
                 Range3.IsChecked = false;
-                MessageBox.Show("The Scale is deleted.", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
 

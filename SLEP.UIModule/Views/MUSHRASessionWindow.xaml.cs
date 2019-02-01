@@ -520,13 +520,14 @@ namespace SLEP.UIModule.Views
 
         private void DisplaytrialsWindow(int rowNumber)
         {
-            //_mushraSession = MushraSessionGrid.Items.GetItemAt(rowNumber) as MushraSessionModel;
-            //if (_mushraSession == null)
-            //{
-            //	return;
-            //}
-            _mushraSessionList[rowNumber].TrialNumber = rowNumber + 1;
-            Window window = new Window
+            _mushraSession = MushraSessionGrid.Items.GetItemAt(rowNumber) as MushraSessionModel;
+			//if (_mushraSession == null)
+			//{
+			//	return;
+			//}
+			//_mushraSessionList[rowNumber].TrialNumber = rowNumber + 1;
+			_mushraSession.TrialNumber = rowNumber + 1;
+			Window window = new Window
             {
                 Title = "MUSHRA Trials Window",
                 Content = new MushraTrialWindow(_mushraSessionList[rowNumber])
@@ -538,9 +539,25 @@ namespace SLEP.UIModule.Views
 
             if (window.ShowDialog() == true)
             {
-             
-                DataContext = _mushraSessionList[rowNumber]; 
-               // MushraSessionGrid.Items.SourceCollection = _mushraSessionList;
+
+				_mushraSession.Reference = GetFileNameFromPath(_mushraSessionList[rowNumber].Reference);
+				_mushraSession.TrialName = _mushraSessionList[rowNumber].TrialName;
+				if (_mushraSession.Sample.Count == 0)
+				{
+					_mushraSessionList[rowNumber].Sample.ToList().ForEach(sample =>
+					{
+						_mushraSession.Sample.Add(GetFileNameFromPath(sample));
+					});
+				}
+				else
+				{
+					for (int count = 0; count < _mushraSessionList[rowNumber].Sample.Count; count++)
+					{
+						_mushraSession.Sample[count] = GetFileNameFromPath(_mushraSessionList[rowNumber].Sample[count]);
+					}
+				}
+
+				DataContext = _mushraSession;
                 MushraSessionGrid.Items.Refresh();
             }
         }
@@ -766,12 +783,21 @@ namespace SLEP.UIModule.Views
             _sessionCreatedFlag = false;
         }
 
-        List<string> _mediapoolFilesWithFullPath = null;
+        List<string> _mediapoolFilesWithFullPath = new List<string> ();
         private void BrowseBtn_Click(object sender, RoutedEventArgs e)
         {
             var fileDialogObject = new Microsoft.Win32.OpenFileDialog();
-            _mediapoolFilesWithFullPath = fileDialogObject.BrowseMultipleFilesToOpen("Audio Files|*.wav").ToList();
-            var fileNameList = fileDialogObject.SafeFileNames.ToList();
+            var fullPathList = fileDialogObject.BrowseMultipleFilesToOpen("Audio Files|*.wav").ToList();
+
+			fullPathList.ForEach(file =>
+			{
+				if (_mediapoolFilesWithFullPath.Contains(file) == false)
+				{
+					_mediapoolFilesWithFullPath.Add(file);
+				}
+			});
+
+			var fileNameList = fileDialogObject.SafeFileNames.ToList();
 
             if (fileNameList?.Count > 0)
             {
@@ -836,12 +862,13 @@ namespace SLEP.UIModule.Views
             var listB = _mushraSessionList.ToList();
             var zippedList = listA.Zip(listB, (a, b) => new { a, b }).ToList();
 
-            trialList = zippedList.Select(pair => pair.a).ToList();
-            sessCollection = trialList.OrderBy(item => randomObj.Next(_trialNumber));
-
+			zippedList = zippedList.OrderBy(item => randomObj.Next(_trialNumber)).ToList();
+			trialList = zippedList.Select(pair => pair.a).ToList();
             _mushraSessionList = zippedList.Select(pair => pair.b).ToList();
 
-            MushraSessionGrid.Items.Clear();
+			sessCollection = trialList;
+
+			MushraSessionGrid.Items.Clear();
             foreach (var item in sessCollection)
             {
                 MushraSessionGrid.Items.Add(item);

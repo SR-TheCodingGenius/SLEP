@@ -157,18 +157,14 @@ namespace SLEP.Audio
 
 		public void FadeInOut(WavePlayer fadein, WavePlayer fadeout, int milliSeconds)
 		{
-			//DelayFadeOutSampleProvider._addReadSamples = 0;
 			var fadeInProvider = fadein._reader.ToSampleProvider();
 			var fadeOutProvider = fadeout._reader.ToSampleProvider();
 
 			_mixer.RemoveInputStream(fadeout._channels);
 			_mixer.RemoveInputStream(fadein._channels);
 
-
 			var fadeOutObject = new FadeInOutSampleProvider(fadeOutProvider);
 			var fadeInObject = new FadeInOutSampleProvider(fadeInProvider);
-			//var fadeOutObject = new DelayFadeOutSampleProvider(fadeOutProvider);
-			//var fadeInObject = new DelayFadeOutSampleProvider(fadeInProvider);
 
 			var waveStream = new WaveProviderToWaveStream(fadeOutObject.ToWaveProvider());
 			var waveStream2 = new WaveProviderToWaveStream(fadeInObject.ToWaveProvider());
@@ -179,10 +175,8 @@ namespace SLEP.Audio
 			_mixer.AddInputStream(fadeout._channels);
 			_mixer.AddInputStream(fadein._channels);
 
-			//fadeOutObject.BeginFadeOut(0, milliSeconds);
 			fadeOutObject.BeginFadeOut(milliSeconds);
 			fadeInObject.BeginFadeIn(milliSeconds);
-
 		}
 
 		public void FadeIn(WavePlayer fadein, double time)
@@ -209,7 +203,7 @@ namespace SLEP.Audio
 		public void FadeOut(WavePlayer fadeout, double time)
 		{
 			var fadeoutObject = RemoveAddStreamsFromMixer(fadeout);
-			fadeoutObject.BeginFadeOut(0, time);
+			fadeoutObject.BeginFadeOut(2, time);
 		}
 		public void FadersInOut(WavePlayer fadeout, double time)
 		{
@@ -228,12 +222,25 @@ namespace SLEP.Audio
 			ISampleProvider copyofSampleProvider = null;
 			wavePlayer._reader.Seek(0, SeekOrigin.Begin);
 			var sampleProvider = wavePlayer._reader.ToSampleProvider();
+
 			var fadeSampleCount = (int)((crossfadeDuration * wavePlayer._reader.WaveFormat.SampleRate) / 1000);
 			copyofSampleProvider = sampleProvider.Skip(TimeSpan.FromSeconds(selectbegintime));
-			copyofSampleProvider.Read(DelayFadeOutSampleProvider._copyofNotPlayingSammplesCapture, 0, fadeSampleCount);
+
+			var readCount = fadeSampleCount > DelayFadeOutSampleProvider._copyofNotPlayingSammplesCapture.Length ? fadeSampleCount :
+				DelayFadeOutSampleProvider._copyofNotPlayingSammplesCapture.Length;
+			copyofSampleProvider.Read(DelayFadeOutSampleProvider._copyofNotPlayingSammplesCapture, 0, readCount);
+
+			CopyofSampleProvider(wavePlayer, selectbegintime);
 
 			DelayFadeOutSampleProvider._regionEndTimeInMillis = selectendTime * 1000;
 			DelayFadeOutSampleProvider._regionStartTimeInMillis = selectbegintime * 1000;
+		}
+
+		public void CopyofSampleProvider(WavePlayer wavePlayer, float selectbegintime)
+		{
+			wavePlayer._reader.Seek(0, SeekOrigin.Begin);
+			var xx = wavePlayer._reader.ToSampleProvider();
+			DelayFadeOutSampleProvider._copyofnonplayingsourceprovider = xx.Skip(TimeSpan.FromSeconds(selectbegintime));
 		}
 
 		public void UpdateSelectionTimesonMouseClicks(float selectbegintime, float selectendtime)
@@ -247,5 +254,7 @@ namespace SLEP.Audio
 			var fadeoutObject = RemoveAddStreamsFromMixer(fadeout);
 			fadeoutObject.BeginFadeOutOnMouseClicksAndPause(2, time);
 		}
+
+
 	}
 }

@@ -35,8 +35,8 @@ namespace SLEP.Audio
 				_device = new WaveOutEvent();
 				_waveStreamList = new List<WaveStream>();
 
-				_device.DesiredLatency = 100; //_device.DesiredLatency = latency;
-				_device.NumberOfBuffers = 2; //_device.NumberOfBuffers = 100 / latency;
+				_device.DesiredLatency = 100;//latency;//_device.DesiredLatency = 100;
+				_device.NumberOfBuffers = 2 ;//100 / latency ;
 				return true;
 			}
 			catch(Exception ex)
@@ -230,12 +230,27 @@ namespace SLEP.Audio
 			ISampleProvider copyofSampleProvider = null;
 			 wavePlayer._reader.Seek(0, SeekOrigin.Begin);
 			var sampleProvider = wavePlayer._reader.ToSampleProvider();
+			
 			var fadeSampleCount = (int)((crossfadeDuration * wavePlayer._reader.WaveFormat.SampleRate) / 1000);
 			copyofSampleProvider = sampleProvider.Skip(TimeSpan.FromSeconds(selectbegintime));
-			copyofSampleProvider.Read(DelayFadeOutSampleProvider._copyofNotPlayingSammplesCapture, 0, fadeSampleCount);
+
+			var readCount = fadeSampleCount > DelayFadeOutSampleProvider._copyofNotPlayingSammplesCapture?.Length ? fadeSampleCount :
+				DelayFadeOutSampleProvider._copyofNotPlayingSammplesCapture.Length;
+
+			//DelayFadeOutSampleProvider._copyofNotPlayingSammplesCapture = new float[2400];
+			copyofSampleProvider.Read(DelayFadeOutSampleProvider._copyofNotPlayingSammplesCapture, 0, readCount);
+
+			CopyofSampleProvider(wavePlayer, selectbegintime);
 
 			DelayFadeOutSampleProvider._regionEndTimeInMillis = selectendTime * 1000;
 			DelayFadeOutSampleProvider._regionStartTimeInMillis = selectbegintime * 1000;
+		}
+
+		public void CopyofSampleProvider(WavePlayer wavePlayer, float selectbegintime)
+		{
+			wavePlayer._reader.Seek(0, SeekOrigin.Begin);
+			var xx = wavePlayer._reader.ToSampleProvider();
+			DelayFadeOutSampleProvider._copyofnonplayingsourceprovider = xx.Skip(TimeSpan.FromSeconds(selectbegintime));
 		}
 
 		public void UpdateSelectionTimesonMouseClicks(float selectbegintime, float selectendtime)

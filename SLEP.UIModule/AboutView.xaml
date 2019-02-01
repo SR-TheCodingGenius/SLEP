@@ -10,7 +10,9 @@
         <Button x:Name="OKBtn" Content="OK" HorizontalAlignment="Left" Margin="363,118,0,0" VerticalAlignment="Top" Width="75" Foreground="AliceBlue" Background="#1AB3D6" Click="OKBtn_Click" />
         <Label x:Name="label" Content="Subjective Listening Evaluation Platform" HorizontalAlignment="Left" Margin="124,26,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.132,-0.269" Width="222" />
         <Label x:Name="label1" Content="Version - SLEP Phase - 1" HorizontalAlignment="Left" Margin="124,52,0,0" VerticalAlignment="Top" Width="144"/>
-        <Label x:Name="label1_Copy" Content="Build Date - 21-December-2018" HorizontalAlignment="Left" Margin="125,83,0,0" VerticalAlignment="Top" Width="178"/>
+        <Label x:Name="label1_Copy" Content="" HorizontalAlignment="Left" Margin="204,83,0,0" VerticalAlignment="Top" Width="115"/>
+        <Label x:Name="label1_Copy1" Content="Build Date -" HorizontalAlignment="Left" Margin="129,83,0,0" VerticalAlignment="Top" Width="70"/>
+
 
     </Grid>
 </UserControl>

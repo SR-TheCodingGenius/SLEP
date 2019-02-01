@@ -21,6 +21,8 @@ namespace SLEP.Audio
 		void FadersInOut(WavePlayer fadeout, double time);
 
 		void CopyofSampleProvider(WavePlayer wavePlayer, float selectbegintime,  float selectendTime, float crossfadeDuration);
+		void CopyofSampleProvider(WavePlayer wavePlayer, float selectbegintime);
+
 		void UpdateSelectionTimesonMouseClicks(float selectbegintime, float selectendtime);
 		void CrossFadeAtEnds(WavePlayer crossfade);
 		void MixWaveProviders(IList<WavePlayer> inputs);

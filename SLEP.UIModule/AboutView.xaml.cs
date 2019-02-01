@@ -1,17 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.IO;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace SLEP.UIModule
 {
@@ -23,6 +13,14 @@ namespace SLEP.UIModule
 		public AboutView()
 		{
 			InitializeComponent();
+			label1_Copy.Content = GetBuildDate();
+		}
+
+		private string GetBuildDate()
+		{
+			var assembly = Assembly.GetExecutingAssembly();
+			var fileInfo = new FileInfo(assembly.Location);
+			return  fileInfo.LastWriteTime.ToString("dd - MMMM - yyyy");
 		}
 
 		private void OKBtn_Click(object sender, RoutedEventArgs e)

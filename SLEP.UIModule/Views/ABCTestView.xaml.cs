@@ -58,7 +58,7 @@ namespace SLEP.UIModule.Views
         private int _sessionIndex = 0;
         private bool _trailPlayed = false;
         private bool _scoringSliderFlag = false;
-		private bool _mouseClicked = false;
+		//private bool _mouseClicked = false;
         ISessionAndScoreLogger _scoreLogger;
 
 
@@ -328,6 +328,7 @@ namespace SLEP.UIModule.Views
 
         private void OnTimerElapsed(object sender, MicroTimerEventArgs e)
         {
+
             Dispatcher.Invoke(() =>
             {
                 if (_doAudioOperations == null)
@@ -352,7 +353,6 @@ namespace SLEP.UIModule.Views
 				}
 
 				StlimusSwitcher();
-
             });
 
         }
@@ -401,16 +401,8 @@ namespace SLEP.UIModule.Views
                 return;
             }
 
-            //SetSelections();
-
             if (SelectBegin < SelectEnd && _isPlaying)
             {
-				if(_regionChangedFlag)
-				{
-					_audioObject.CopyofSampleProvider(_newlistOfWavePlayers[_current], SelectBegin, SelectEnd, _settingsObject.CrossfadeTime);
-					_regionChangedFlag = false;
-				}
-
 				_waveDisplay.ChannelPosition = _audioObject.GetCurrentTime().TotalSeconds;
                 var fadeOutTime = (SelectEnd - _audioObject.GetCurrentTime().TotalSeconds) * 1000.0;
 
@@ -420,7 +412,7 @@ namespace SLEP.UIModule.Views
 					{
 						_audioObject.SetCurrentTime(TimeSpan.FromSeconds(SelectBegin));
 						_audioObject.CrossFadeAtEnds(_doAudioOperations[_current]);
-						_audioObject.UpdateSelectionTimesonMouseClicks(SelectBegin, SelectEnd);
+						_audioObject.CopyofSampleProvider(_newlistOfWavePlayers[_current], SelectBegin);
 						_fadeinFlag = true;
 						DelayFadeOutSampleProvider._triStateFlag = 0;
 					}
@@ -452,11 +444,12 @@ namespace SLEP.UIModule.Views
 
             if (_loopFalg)
             {
-                if (fadeOutTime <= 200.0)
+                if (fadeOutTime <= 101.0)
                 {
-                    if (_fadeinFlag)
+                   if (_fadeinFlag)
                    {
-						_audioObject.FadersInOut(_doAudioOperations[_current], _settingsObject.CrossfadeTime);
+						_audioObject.CopyofSampleProvider(_newlistOfWavePlayers[_current], SelectBegin, SelectEnd, 10);
+						_audioObject.FadersInOut(_doAudioOperations[_current], 10);
 						_fadeinFlag = false;
                    }
                 }
@@ -566,11 +559,28 @@ namespace SLEP.UIModule.Views
             }
 
             HighlightPlayingAudio(buttonClicked);
+			SetSelections();
 
 			if (!_isPlaying)
 			{
 				_current = buttonClicked;
 				
+				if(_testModeFlag)
+				{
+					if (_current == 0)
+					{
+						_aFlag = true;						
+					}
+					else if(_current == 1)
+					{
+						_bFlag = true;
+					}
+					else if (_current == 2)
+					{
+						_cFlag = true;
+					}
+				}
+
 				_audioObject.FadeIn(_doAudioOperations[_current], _settingsObject.CrossfadeTime);
 				_fadeinFlag = true;
 				_doAudioOperations[_current].SetVolumeStream(1);
@@ -591,7 +601,7 @@ namespace SLEP.UIModule.Views
                     _aFlag = _testModeFlag ? true : false;
                 }
             }
-			_audioObject.CopyofSampleProvider(_newlistOfWavePlayers[buttonClicked], SelectBegin, SelectEnd, _settingsObject.CrossfadeTime);
+			//_audioObject.CopyofSampleProvider(_newlistOfWavePlayers[buttonClicked], SelectBegin, SelectEnd, _settingsObject.CrossfadeTime);
 		}
 
         private void PauseAudio()
@@ -950,7 +960,7 @@ namespace SLEP.UIModule.Views
 						_audioObject.UpdateSelectionTimesonMouseClicks((float)_waveDisplay.ChannelPosition, SelectEnd);
 					}
 					_audioObject.FadeIn(_doAudioOperations[_current],_settingsObject.CrossfadeTime);
-					_mouseClicked = true;
+					//_mouseClicked = true;
 				}
 			}
 
