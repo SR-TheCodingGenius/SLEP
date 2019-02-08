@@ -153,6 +153,7 @@ namespace SLEP.Audio
 				{
 					_waveStreamList.Add(obj._reader);
 				}
+				
 				_device.Init(_mixer);
 
 			}

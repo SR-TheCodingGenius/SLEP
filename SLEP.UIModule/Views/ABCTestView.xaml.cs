@@ -419,7 +419,8 @@ namespace SLEP.UIModule.Views
 
                     if (!_loopFalg && DelayFadeOutSampleProvider._triStateFlag == 1)
                     {
-                        PlayEnabled(true);
+						_microTimer.Stop();
+						PlayEnabled(true);
 						_fadeoutFlag = true;
 						Thread.Sleep(500);
 						_audioObject.StopAudio();
@@ -429,7 +430,7 @@ namespace SLEP.UIModule.Views
                         _waveDisplay.ChannelPosition = _waveDisplay.SelectionBegin.TotalSeconds;
 						DelayFadeOutSampleProvider._triStateFlag = 0;
 						_isPlaying = false;
-                        _microTimer.Stop();
+                        
                     }
                 }
                 else

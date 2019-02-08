@@ -45,7 +45,6 @@ namespace SLEP.Audio
 		public static ISampleProvider _copyofnonplayingsourceprovider;
 		public static float[] _copyofNotPlayingSammplesCapture;
 
-
 		public DelayFadeOutSampleProvider(ISampleProvider source, bool initiallySilent = false)
 		{
 			this.source = source;
@@ -65,12 +64,7 @@ namespace SLEP.Audio
 				fadeSampleCount = (int)((fadeDurationInMilliseconds * source.WaveFormat.SampleRate * source.WaveFormat.Channels) / 1000);
 				fadeState = FadeState.FadingIn;
 				_fadeDuration = fadeDurationInMilliseconds;
-				if (_fadeinVolumes == null && _fadeoutVolumes == null)
-				{
-					_fadeoutVolumes = new float[fadeSampleCount];
-					_fadeinVolumes = new float[fadeSampleCount];
-					CalculateFadeOutVolumes();
-				}				
+							
 			}
 		}
 
@@ -99,6 +93,14 @@ namespace SLEP.Audio
 			fadeOutDelaySamples = (int)((fadeAfterMilliseconds * source.WaveFormat.SampleRate) / 1000);
 			fadeOutDelayPosition = 0;
 			fadeState = FadeState.FadingInOut;
+			
+			if (_fadeoutVolumes == null && _fadeinVolumes == null)
+			{
+				_fadeoutVolumes = new float[fadeSampleCount];
+				_fadeinVolumes = new float[fadeSampleCount];
+			}
+
+			CalculateFadeInOutVolumes();
 		}
 
         public void BeginCrossFadeAtEnds()
@@ -106,27 +108,58 @@ namespace SLEP.Audio
             fadeState = FadeState.CrossFade;
         }
 
+		private void ExecuteWhenStateTransitionsToCrossFade(float[] buffer, int sampleCount)
+		{
+			if (!_nondivisibleFlag)
+			{
+				var time = bytesRead * 1000 / source.WaveFormat.SampleRate * source.WaveFormat.Channels;
+				source = source.Skip(TimeSpan.FromMilliseconds(timetoSkip + time));
+				bytesRead = 0;
+			}
+			else
+			{
+				var tempBuffer = new float[copyofOffsetSamples];
+				source = source.Skip(TimeSpan.FromMilliseconds(timetoSkip));
+				
+				source.Read(tempBuffer, 0, copyofOffsetSamples);
+
+				var mod = bytesRead % sampleCount;
+				if (mod == 0)
+				{
+					var times = bytesRead / sampleCount;
+					for (int count = 0; count < times; count++)
+					{
+						source.Read(buffer, 0, sampleCount);
+					}
+				}
+				else
+				{
+					while(bytesRead > sampleCount)
+					{
+						source.Read(buffer, 0, sampleCount);
+						bytesRead -= sampleCount;
+					}
+					source.Read(buffer, 0, bytesRead);
+				}
+				
+				_nondivisibleFlag = false;
+				
+			}
+			bufferOverrideflag = false;
+			timetoSkip = 0;
+			fadeState = FadeState.FullVolume;
+		}
+
 		static int countMethod = 0;
 		public int Read(float[] buffer, int offset, int count)
 		{
 			int sourceSamplesRead = 0;
-		
+
 			if (fadeState == FadeState.CrossFade)
 			{
-				source = source.Skip(TimeSpan.FromMilliseconds(timetoSkip));
-				_copyofnonplayingsourceprovider = _copyofnonplayingsourceprovider.Skip(TimeSpan.FromMilliseconds(timetoSkip));
-
-				if(_nondivisibleFlag)
-				{
-					source.Read(buffer, 0, copyofOffsetSamples);
-					_copyofnonplayingsourceprovider.Read(buffer, 0, copyofOffsetSamples);
-					_nondivisibleFlag = false;
-				}
-				bufferOverrideflag = false;
-				timetoSkip = 0;
-				fadeState = FadeState.FullVolume;
+				ExecuteWhenStateTransitionsToCrossFade(buffer, count);
 			}
-			
+
 			sourceSamplesRead = source.Read(buffer, offset, count);
 
 			// initializes buffer for crossfade operation.
@@ -137,27 +170,28 @@ namespace SLEP.Audio
 			}
 
 			// gets called after the audio pointer is moved to starting of the region
-			if(copyofOffsetSamples > 0 && !bufferOverrideflag)
+			if (copyofOffsetSamples > 0 && !bufferOverrideflag)
 			{
 				var offsetSamples = bytesRead;
-				OverrideOffsetSamples(buffer, offsetSamples, sourceSamplesRead);
+				//OverrideOffsetSamples(buffer, offsetSamples, sourceSamplesRead);
 				copyofOffsetSamples = 0;
+				bytesRead = 0;
 			}
 
-			// calcualtes number of samples with in the region
+			// calculates number of samples with in the region and converts into time duration
 			_addReadSamples += sourceSamplesRead;
-			duration = (_addReadSamples / (double)source.WaveFormat.SampleRate) * 1000.0;
+			duration = (_addReadSamples / (double)source.WaveFormat.SampleRate * source.WaveFormat.Channels) * 1000.0;
 
 			if (fadeOutDelaySamples > 0)
 			{
 				fadeOutDelayPosition += sourceSamplesRead / WaveFormat.Channels;
 				if (fadeOutDelayPosition >= fadeOutDelaySamples)
 				{
-					fadeOutDelaySamples = 0;					
+					fadeOutDelaySamples = 0;
 				}
 			}
 
-			// over rides samples with beginning of the region, this gets called  after crossfade.
+			// over-rides samples with beginning of the region, this gets called  after crossfade.
 			if (bufferOverrideflag)
 			{
 				ReadExtraBlocks(buffer, count);
@@ -165,18 +199,18 @@ namespace SLEP.Audio
 			}
 
 			if (fadeState == FadeState.FadingIn)
-			{				
+			{
 				FadeIn(buffer, offset, sourceSamplesRead);
 			}
 			else if (fadeState == FadeState.FadingOut)
 			{
 				// initiates fadeout at end of the region in non-loop.
 				if (_regionStartTimeInMillis + duration >= _regionEndTimeInMillis)
-				{				
+				{
 					FadeOut(buffer, offset, sourceSamplesRead);
 					_addReadSamples = 0;
 					_triStateFlag = 1;
-				}				
+				}
 			}
 			else if (fadeState == FadeState.FadingoutOnMouseClicksAndPause)
 			{
@@ -188,8 +222,8 @@ namespace SLEP.Audio
 				ClearBuffer(buffer, offset, count);
 			}
 			else if (fadeState == FadeState.FadingInOut)
-			{	
-				// initiates crossfade at the loop endings
+			{
+				//initiates crossfade at the loop endings
 				FadeOutAtLast(buffer, offset, count);
 				_triStateFlag = 1;
 				copyofStartTimeinMillis = _regionStartTimeInMillis;
@@ -200,36 +234,16 @@ namespace SLEP.Audio
 
 		static int bytesRead = 0;
 		/// <summary>
-		/// Overides samples with non-playing sample provider samples.
-		/// </summary>
-		/// <param name="buffer"></param>
-		/// <param name="offsetSamples"></param>
-		/// <param name="actualSamples"></param>
-		private void OverrideOffsetSamples(float [] buffer, int offsetSamples, int actualSamples)
-		{
-			if(offsetSamples > 0)
-			{
-				var tempBuffer = new float[offsetSamples];
-				_copyofnonplayingsourceprovider.Read(tempBuffer, 0, offsetSamples);
-			}
-
-			var readBuffer = new float[actualSamples];
-			_copyofnonplayingsourceprovider.Read(readBuffer, 0, actualSamples);
-					
-			for (int count = 0; count < actualSamples; count++)
-			{
-				buffer[count] = readBuffer[count];
-			}			
-		}
-
-		/// <summary>
 		/// Reads extra data blocks (if any) after applying crossfade algorithm
 		/// </summary>
 		/// <param name="buffer"></param>
 		/// <param name="count"></param>
 		private void ReadExtraBlocks(float [] buffer, int count)
 		{
-			var temporaryArray = new float[count];
+
+			int length = (offsetbytes > count) ? offsetbytes : count;
+			
+			var temporaryArray = new float[length];
 
 			if (offsetbytes > 0)
 			{
@@ -237,12 +251,12 @@ namespace SLEP.Audio
 			}
 
 			var sourceSamplesRead = _copyofnonplayingsourceprovider.Read(temporaryArray, 0, count);
-			for (int i = 0; i < count; i++)
+			for (int i = 0; i < sourceSamplesRead; i++)
 			{
 				buffer[i] = temporaryArray[i];
 			}
 
-			bytesRead +=  count;
+			bytesRead += sourceSamplesRead;
 			offsetbytes = 0;
 		}
 
@@ -254,7 +268,6 @@ namespace SLEP.Audio
 				buffer[n + offset] = 0;
 			}
 		}
-
 		
 		private void FadeOutAtLast(float[] buffer, int offset, int sourceSamplesRead)
 		{
@@ -268,8 +281,8 @@ namespace SLEP.Audio
 				fadeSamplePosition++;
 				sample++;
 
-				if(fadeSamplePosition >= fadeSampleCount)
-				{	
+				if (fadeSamplePosition >= fadeSampleCount)
+				{
 					// Fill remaining samples after Crossfade Logic....
 					timetoSkip = FillBufferWithSamples(buffer, sample + offset, sourceSamplesRead - sample);
 					fadeState = FadeState.FullVolume;
@@ -277,16 +290,15 @@ namespace SLEP.Audio
 				}
 			}
 		}
+
 		static bool _nondivisibleFlag = false;
 		private double  FillBufferWithSamples(float[] buffer, int offset, int count)
 		{	
 			int n = 0 ;
+			int time = 0;
 			for (n = 0; n < count; n++)
 			{
-				if (_copyofNotPlayingSammplesCapture[n + offset] != 0.0)
-				{
-					buffer[n + offset] = _copyofNotPlayingSammplesCapture[n + offset];
-				}
+				buffer[n + offset] = _copyofNotPlayingSammplesCapture[n + offset];
 			}
 
 			bufferOverrideflag = true;
@@ -295,10 +307,19 @@ namespace SLEP.Audio
 			var mod = (count * 1000) % source.WaveFormat.SampleRate * source.WaveFormat.Channels;
 
 			_nondivisibleFlag = mod != 0 ? true : false;
-			offsetbytes = count;
-			copyofOffsetSamples = count;
-			_copyofnonplayingsourceprovider = _copyofnonplayingsourceprovider.Skip(TimeSpan.FromMilliseconds(fadeDurationInMillis));
-			return fadeDurationInMillis;
+			if (_nondivisibleFlag)
+			{
+				offsetbytes = count;
+				copyofOffsetSamples = count;
+			}
+			else
+			{
+				time = (count * 1000) / source.WaveFormat.SampleRate * source.WaveFormat.Channels;
+				offsetbytes = 0;
+				copyofOffsetSamples = 0;
+			}
+			_copyofnonplayingsourceprovider = _copyofnonplayingsourceprovider.Skip(TimeSpan.FromMilliseconds(fadeDurationInMillis + time));
+			return fadeDurationInMillis + time;
 		}
 
 		private void FadeOut(float[] buffer, int offset, int sourceSamplesRead)
@@ -336,11 +357,12 @@ namespace SLEP.Audio
 
 			}
 		}
-		private void CalculateFadeOutVolumes()
+		private void CalculateFadeInOutVolumes()
 		{
 			int sample = 0;
 			float multiplier = 0.0f;
 
+			// Calculate Fade-out Volumes
 			while (sample < fadeSampleCount)
 			{
 
@@ -355,9 +377,29 @@ namespace SLEP.Audio
 				}
 
 				_fadeoutVolumes[sample] = multiplier;
+				sample++;				
+			}			
+			sample = 0;
+			multiplier = 0.0f;
+			// Calculate Fade-in Volumes
+			while (sample < fadeSampleCount)
+			{
+				if (_settingsObject.XVFades == true)
+				{
+					var fadeinX = (sample / (float)fadeSampleCount);
+					multiplier = _crossFadeInstance.FadeInVolume(fadeinX);
+
+				}
+				else
+				{
+					multiplier = (sample / (float)fadeSampleCount);
+				}
+
+				_fadeinVolumes[sample] = multiplier;
 				sample++;
-				
 			}
+			
+
 		}
 
 		
@@ -381,7 +423,6 @@ namespace SLEP.Audio
 				for (int ch = 0; ch < source.WaveFormat.Channels; ch++)
 				{
 					buffer[offset + sample] *= multiplier;
-					_fadeinVolumes[fadeSamplePosition] = multiplier;
 					sample++;
 				}
 				fadeSamplePosition++;
