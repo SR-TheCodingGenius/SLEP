@@ -38,13 +38,11 @@ namespace SLEP.UIModule.Menu
 				Content = new ABCSessionWindow(_fileName)
 			};
 
+			_abcFlag = true;
+			_mushraFlag = false;
+			_mushraModelList.SessionFileName = "";
 			window.SetWindowProperties();
-			if (window.ShowDialog() == true)
-			{
-				_abcFlag = true;
-				_mushraFlag = false;				
-			}
-
+			window.ShowDialog();
 		}
 
 		public int SampleTags {get { return _countSampleTags; } }
@@ -57,15 +55,13 @@ namespace SLEP.UIModule.Menu
 				Title = string.Format("MUSHRA SESSION WINDOW \t {0}", _fileName),
 				Content = new MUSHRASessionWindow(_fileName)
 			};
+			
+			_abcFlag = false;
+			_mushraFlag = true;
+			_abcModelList.SessionFileName = "";
 
 			window.SetWindowProperties();
-			if(window.ShowDialog() == true)
-			{
-				_abcFlag = false;
-				_mushraFlag = true;
-				
-			}
-
+			window.ShowDialog();
 		}
 
 		public void OpenSession(object sender, RoutedEventArgs e)
@@ -143,14 +139,14 @@ namespace SLEP.UIModule.Menu
 				
 				if (_countSampleTags > 1)
 				{
-					_mushraFlag = true;
-					_abcFlag = false;
+					//_mushraFlag = true;
+					//_abcFlag = false;
 					MushraNewSession();
 				}
 				else
 				{
-					_mushraFlag = false;
-					_abcFlag = true;
+					//_mushraFlag = false;
+					//_abcFlag = true;
 					AbcNewSession();					
 				}
 					

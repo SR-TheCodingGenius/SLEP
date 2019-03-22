@@ -241,6 +241,7 @@ namespace SLEP.Audio
 			wavePlayer._reader.Seek(0, SeekOrigin.Begin);
 			var xx = wavePlayer._reader.ToSampleProvider();
 			DelayFadeOutSampleProvider._copyofnonplayingsourceprovider = xx.Skip(TimeSpan.FromSeconds(selectbegintime));
+			
 		}
 
 		public void UpdateSelectionTimesonMouseClicks(float selectbegintime, float selectendtime)

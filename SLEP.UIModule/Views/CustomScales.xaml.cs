@@ -139,7 +139,7 @@ namespace SLEP.UIModule.Views
                 return false;
             }
 
-            if (item == 1)
+            if (item == 1) // For Create Scale
             {
                 if (ScaleLBox.Items.Contains(scaleName))
                 {
@@ -180,7 +180,7 @@ namespace SLEP.UIModule.Views
                 }
             }
 
-            if (item == 2)
+            if (item == 2) // For Modify Scale
             {
 
                 if (!ScaleLBox.Items.Contains(scaleName))
@@ -227,24 +227,12 @@ namespace SLEP.UIModule.Views
         bool _addToListClicked = false;
         private void OnAddListClicked(object sender, RoutedEventArgs e)
         {
-            //if (ValidateScaleProperties() == false)
-            //{
-            //	MessageBox.Show("All Editable Fields are Mandatory!!!!\n They can't be left blank", "Error", MessageBoxButton.OK, MessageBoxImage.Asterisk);
-            //	return;
-            //}
-
-            //FillDataFromControlsToBuffers();
-
-            //var scaleName = _customScaleProperties.ScaleName;
-            //ScaleLBox.Items.Add(scaleName);
-            //_addToListClicked = true;
-
             if (ValidateScaleProperties(1))
             {
                 FillDataFromControlsToBuffers();
                 var scaleName = _customScaleProperties.ScaleName;
                 ScaleLBox.Items.Add(scaleName);
-                ClearFields();
+                ///ClearFields();
 				_addToListClicked = true;
 			}
         }
@@ -302,19 +290,34 @@ namespace SLEP.UIModule.Views
 
         private void OnOKBtnClicked(object sender, RoutedEventArgs e)
         {
-            if (_addToListClicked)
-            {
-                if (_customScalePropertiesList.Count > 0)
-                {
-                    StoreCustomScaleConfiguration(_customScalePropertiesList);
-                    MessageBox.Show("The Custom Scales added to the list are saved to file", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
-                    ClearFields();
-                }
-            }
+			
 
-            var parentWindow = (Window)this.Parent;
-            parentWindow.DialogResult = true;
-            parentWindow.Close();
+			var flag = _customComments.Where(textBox => textBox.IsEnabled == true).All(comment => comment.Text == "");
+			if(flag && !_addToListClicked)
+			{
+				var parentWindow = (Window)this.Parent;
+				parentWindow.DialogResult = true;
+				parentWindow.Close();
+				return;
+			}
+
+			flag = _customComments.Where(textBox => textBox.IsEnabled == true).Any(comment => comment.Text != "");
+			if (!flag || !_addToListClicked)
+			{
+				MessageBox.Show("The Custom Scale is not created yet.\n Click on Create Scale button to create one.", "Info",
+				MessageBoxButton.OK, MessageBoxImage.Information);
+				return;
+			}
+			else
+			{
+				StoreCustomScaleConfiguration(_customScalePropertiesList);
+				MessageBox.Show("The Custom Scales added to the list are saved to file", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
+
+				var parentWindow = (Window)this.Parent;
+				parentWindow.DialogResult = true;
+				parentWindow.Close();
+			}
+			           
         }
 
         private void OnModifyClicked(object sender, RoutedEventArgs e)

@@ -6,6 +6,7 @@ using System.Windows.Controls;
 using System.Linq;
 using System.IO;
 using Microsoft.Win32;
+using System;
 
 namespace SLEP.UIModule.Views
 {
@@ -19,7 +20,8 @@ namespace SLEP.UIModule.Views
         private ScoreFileDetails _previousScoreFileDetailsObj = null;
         private IList<ScoreFileDetails> _scoreFileDetailsList = new List<ScoreFileDetails>();
         private IDictionary<int, List<string>> _fileScoresByUsers = new Dictionary<int, List<string>>();
-        private string _outputFileName = "";
+        private FileStream _fileStream = null;
+
         public ScoreMerge()
         {
             InitializeComponent();
@@ -210,25 +212,7 @@ namespace SLEP.UIModule.Views
             _scoreFileDetailsList.ToList().ForEach(scoreFile =>
             {
                 var scoreList = scoreFile.ScoresList.ToList();
-                //firstScoreFileObj.All(item => 
-                //{
-
-                //	return scoreList.Any(item2 => 
-                //	{
-                //		if(item.File == item2.File && item.Trial == item2.Trial)
-                //		{
-                //			_fileScoresByUsers[Key].Add(item2.Score);
-                //			Key += 1;
-                //			return true;
-                //		}
-                //		else
-                //		{
-                //			return false;
-                //		}
-                //	});
-
-                //});
-
+              
                 for (int count = 0; count < firstScoreFileObj.Count;)
                 {
                     for (int count2 = 0; count2 < firstScoreFileObj.Count;)
@@ -260,7 +244,7 @@ namespace SLEP.UIModule.Views
             try
             {
 
-                using (var streamWriter = new StreamWriter(_outputFileName))
+                using (var streamWriter = new StreamWriter(_fileStream))
                 {
                     var scoreFileList = _scoreFileDetailsList.ToList();
                     var firstScoreFile = scoreFileList.FirstOrDefault();
@@ -289,7 +273,7 @@ namespace SLEP.UIModule.Views
                     streamWriter.Close();
                 }
             }
-            catch
+            catch(Exception e)
             {
 
             }
@@ -304,22 +288,18 @@ namespace SLEP.UIModule.Views
 
         private void BrowseBtn_Click(object sender, RoutedEventArgs e)
         {
-            string fileName = "";
-
             var saveFileDialog = new SaveFileDialog();
-            saveFileDialog.Filter = "Text Files|*.txt";
+			saveFileDialog.Filter = "Text Files|*.txt";
 
-            var result = saveFileDialog.ShowDialog();
-            if (result == true)
-            {
-                if (!File.Exists(saveFileDialog.FileName))
-                {
-                    File.Create(saveFileDialog.FileName);
-                }
-                fileName = saveFileDialog.FileName;
-                OutputFileText.Text = fileName;
-                _outputFileName = fileName;
-            }
-        }
+			var result = saveFileDialog.ShowDialog();
+			if (result == true)
+			{
+				if (!File.Exists(saveFileDialog.FileName))
+				{
+					_fileStream = File.Create(saveFileDialog.FileName);								
+				}
+				OutputFileText.Text = saveFileDialog.FileName;
+			}
+		}
     }
 }

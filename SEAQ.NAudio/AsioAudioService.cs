@@ -76,8 +76,7 @@ namespace SLEP.Audio
 		public string[] GetDriverNames()
 		{
 			var names = AsioOut.GetDriverNames();
-			return names;
-			
+			return names;			
 		}
 		public bool IntializeNAudioLibrary(int latency)
 		{

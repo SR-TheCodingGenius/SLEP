@@ -277,6 +277,7 @@ namespace SLEP.Audio
 		{
 
 		}
+
 		public WavePlayer(string FileName)
 		{
 			_reader = new WaveFileReader(FileName);

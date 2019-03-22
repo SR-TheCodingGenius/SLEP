@@ -123,6 +123,8 @@ namespace SLEP.UIModule.Views.MUSHRATestViews
 			WaveFormDisplay.RepeatRegionWidth = 0;
 			_current = -1;
 			_next = -1;
+			StartText.Clear();
+			StopText.Clear();
 		}
 		private void MUSHRASessionWindow_SessionCreated(object sender, MushraTestDetailsModel e)
 		{
@@ -155,6 +157,7 @@ namespace SLEP.UIModule.Views.MUSHRATestViews
 			{
 				using (var obj = new FileMenuViewObject())
 				{
+					MessageBox.Show("Audio Hardware not Connected/Installed", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
 					obj.CloseSession();
 				}
 
@@ -333,24 +336,29 @@ namespace SLEP.UIModule.Views.MUSHRATestViews
 					return;
 				}
 				var currenttime = _audioObject.GetCurrentTime();
-				string currentTimeStamp = currenttime.Minutes + ":" + currenttime.Seconds + ":" + currenttime.Milliseconds;
+
+				if (currenttime.TotalSeconds <= SelectEnd)
+				{
+					string currentTimeStamp = currenttime.Minutes + ":" + currenttime.Seconds + ":" + currenttime.Milliseconds;
+					StartText.Text = currentTimeStamp;
+				}
+				
 
 				if (_isPlaying)
 				{
 					_waveDisplay.ChannelPosition = currenttime.TotalSeconds;
 				}
-
-				StartText.Text = currentTimeStamp;
-
+				
 				PlayInSelectedRegion();
 
-				if (_loopFalg == false) // When Loop is SET, the audio never ends playing until Loop is reset
+				if (_loopFalg == false && SelectBegin <= 0)
 				{
 					ResetAtMaximum();
 				}
 
 				StlimusSwitcher();
 			});
+
 
 		}
 		private void PlayEnabled(bool flag)
@@ -372,6 +380,16 @@ namespace SLEP.UIModule.Views.MUSHRATestViews
 		bool _regionChangedFlag = false;
 		private void SetSelections()
 		{
+			if (_isCanvasCleared)
+				return;
+			if (Math.Abs(SelectBegin - (float)_waveDisplay.SelectionBegin.TotalSeconds) > 0.0 || Math.Abs(SelectEnd - (float)_waveDisplay.SelectionEnd.TotalSeconds) > 0.0)
+			{
+				_regionChangedFlag = true;
+			}
+			else
+			{
+				_regionChangedFlag = false;
+			}
 			if (IsRegionExists)
 			{
 				SelectEnd = (float)_waveDisplay.SelectionEnd.TotalSeconds;
@@ -380,53 +398,51 @@ namespace SLEP.UIModule.Views.MUSHRATestViews
 			else
 			{
 				SelectEnd = (float)_audioObject.GetTotalDuration().TotalSeconds;
+				_waveDisplay.SelectionEnd = _audioObject.GetTotalDuration();
 				SelectBegin = 0.0f;
 			}
 			if (SelectBegin < 0.0)
 			{
 				SelectBegin = 0.0f;
+				_waveDisplay.SelectionBegin = TimeSpan.FromSeconds(0);
 			}
 
-			if (SelectEnd > _audioObject.GetTotalDuration().TotalSeconds)
+			if (SelectEnd >= _audioObject.GetTotalDuration().TotalSeconds)
 			{
 				SelectEnd = (float)_audioObject.GetTotalDuration().TotalSeconds;
+				_waveDisplay.SelectionEnd = TimeSpan.FromSeconds(SelectEnd);
+				SelectEnd -= 0.1f;
 			}
 
-		
 		}
 		bool _fadeinFlag = true;
 		bool _fadeoutFlag = true;
 		private void PlayInSelectedRegion()
 		{
-
 			if (_sessCreatedFlag == false)
 			{
 				return;
 			}
-			SetSelections();
 
 			if (SelectBegin < SelectEnd && _isPlaying)
 			{
-				if (_regionChangedFlag)
-				{
-					_audioObject.CopyofSampleProvider(_newlistOfWavePlayers[_current], SelectBegin, SelectEnd, _settingsObject.CrossfadeTime);
-					_regionChangedFlag = false;
-				}
 				_waveDisplay.ChannelPosition = _audioObject.GetCurrentTime().TotalSeconds;
-				var fadeOutTime = ((SelectEnd * 1000.0) - (_waveDisplay.ChannelPosition * 1000.0));
+				var fadeOutTime = (SelectEnd - _audioObject.GetCurrentTime().TotalSeconds) * 1000.0;
 
 				if (_waveDisplay.ChannelPosition >= SelectEnd)
 				{
 					if (_loopFalg)
 					{
 						_audioObject.SetCurrentTime(TimeSpan.FromSeconds(SelectBegin));
+						_waveDisplay.ChannelPosition = SelectBegin;
 						_audioObject.CrossFadeAtEnds(_doAudioOperations[_current]);
 						_audioObject.CopyofSampleProvider(_newlistOfWavePlayers[_current], SelectBegin);
 						_fadeinFlag = true;
-						DelayFadeOutSampleProvider._triStateFlag = 0;
 					}
-					else
+
+					if (!_loopFalg)
 					{
+						_microTimer.Stop();
 						PlayEnabled(true);
 						_fadeoutFlag = true;
 						Thread.Sleep(500);
@@ -437,27 +453,26 @@ namespace SLEP.UIModule.Views.MUSHRATestViews
 						_waveDisplay.ChannelPosition = _waveDisplay.SelectionBegin.TotalSeconds;
 						DelayFadeOutSampleProvider._triStateFlag = 0;
 						_isPlaying = false;
-						_microTimer.Stop();
+
 					}
 				}
 				else
 				{
 					FadeOutAtTheEndOfRegions(fadeOutTime);
 				}
-								
 			}
-
 		}
 
 		private void FadeOutAtTheEndOfRegions(double fadeOutTime)
 		{
 			if (_loopFalg)
 			{
-				if (fadeOutTime <= 100.0)
+				if (fadeOutTime <= 101.0)
 				{
 					if (_fadeinFlag)
 					{
-						_audioObject.FadersInOut(_doAudioOperations[_current], _settingsObject.CrossfadeTime);
+						_audioObject.CopyofSampleProvider(_newlistOfWavePlayers[_current], SelectBegin, SelectEnd, 10);
+						_audioObject.FadersInOut(_doAudioOperations[_current], 10);
 						_fadeinFlag = false;
 					}
 				}
@@ -538,7 +553,7 @@ namespace SLEP.UIModule.Views.MUSHRATestViews
 			SetSelections();
 			if (_isPlaying)
 			{
-				_audioObject.FadeoutOnMouseClicksAndPause(_doAudioOperations[_current], _settingsObject.CrossfadeTime);
+				_audioObject.FadeoutOnMouseClicksAndPause(_doAudioOperations[_current], 10);
 				Thread.Sleep(150);
 				if (_audioObject != null)
 				{
@@ -548,7 +563,7 @@ namespace SLEP.UIModule.Views.MUSHRATestViews
 					{
 						_audioObject.UpdateSelectionTimesonMouseClicks((float)_waveDisplay.ChannelPosition, SelectEnd);
 					}
-					_audioObject.FadeIn(_doAudioOperations[_current], _settingsObject.CrossfadeTime);
+					_audioObject.FadeIn(_doAudioOperations[_current], 10);
 					
 				}
 			}
@@ -596,7 +611,7 @@ namespace SLEP.UIModule.Views.MUSHRATestViews
 				throw new NullReferenceException("The Audio Object is not Intialized yet!!!!");
 			}
 			
-			SetSelections();
+			//SetSelections();
 
 			if (!_isPlaying)
 			{
@@ -606,7 +621,7 @@ namespace SLEP.UIModule.Views.MUSHRATestViews
 				{
 					return;
 				}
-				_audioObject.FadeIn(_doAudioOperations[_current], _settingsObject.CrossfadeTime);
+				_audioObject.FadeIn(_doAudioOperations[_current], 10);
 				//_fadeinFlag = true;
 				_doAudioOperations[_current].SetVolumeStream(1);
 
@@ -623,12 +638,12 @@ namespace SLEP.UIModule.Views.MUSHRATestViews
 			{
 				_next = buttonClicked;
 			}
-			_audioObject.CopyofSampleProvider(_newlistOfWavePlayers[buttonClicked], SelectBegin, SelectEnd, _settingsObject.CrossfadeTime);
+			//_audioObject.CopyofSampleProvider(_newlistOfWavePlayers[buttonClicked], SelectBegin, SelectEnd, _settingsObject.CrossfadeTime);
 		}
 
 		private void PauseAudio()
 		{
-			_audioObject.FadeoutOnMouseClicksAndPause(_doAudioOperations[_current], _settingsObject.CrossfadeTime);
+			_audioObject.FadeoutOnMouseClicksAndPause(_doAudioOperations[_current], 10);
 			Thread.Sleep(500);
 			_audioObject.PauseAudio();
 			_microTimer.Stop();
@@ -638,12 +653,9 @@ namespace SLEP.UIModule.Views.MUSHRATestViews
 
 		private void OnMushraClickedButton(object sender, int buttonIndex)
 		{
-			
-			if (_audioObject.GetPlayBackState() == PlayBackState.Stopped || _audioObject.GetPlayBackState() == PlayBackState.Paused)
-			{
-				_mushraButtonIndex = buttonIndex;
-			}
-			else
+			_mushraButtonIndex = buttonIndex;
+
+			if (_audioObject.GetPlayBackState() != PlayBackState.Stopped || _audioObject.GetPlayBackState() != PlayBackState.Paused)
 			{
 				PlayClickedAudio(buttonIndex);
 			}
