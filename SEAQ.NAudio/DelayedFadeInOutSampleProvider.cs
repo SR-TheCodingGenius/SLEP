@@ -2,6 +2,7 @@
 using SLEP.CrossFadeAlgo;
 using SLEP.Models;
 using System;
+using System.Diagnostics;
 
 namespace SLEP.Audio
 {
@@ -33,13 +34,11 @@ namespace SLEP.Audio
 		private static float[] _fadeinVolumes;
 		private static double timetoSkip = 0;
 		private static float copyofStartTimeinMillis = 0.0f;
-		private static double duration = 0.0;
 		private bool bufferOverrideflag = false;
 		private static int offsetbytes = 0;
 		private static int copyofOffsetSamples = 0;
 		public static float _regionStartTimeInMillis = 0.0f;
 		public static int _triStateFlag = -1;
-		public static int _addReadSamples = 0;
 		public static float _regionEndTimeInMillis = 0.0f;
 		public static ISampleProvider _copyofnonplayingsourceprovider;
 		public static float[] _copyofNotPlayingSammplesCapture;
@@ -106,21 +105,29 @@ namespace SLEP.Audio
             fadeState = FadeState.CrossFade;
         }
 
+		private void ResetVariables()
+		{
+			bytesRead = 0;
+			countMethod = 0;
+			bufferOverrideflag = false;
+			timetoSkip = 0;
+			_nondivisibleFlag = false;
+		}
 		private void ExecuteWhenStateTransitionsToCrossFade(float[] buffer, int sampleCount)
 		{
 			fadeState = FadeState.FullVolume;
+
 			if (!_nondivisibleFlag)
 			{
 				var time = bytesRead * 1000 / source.WaveFormat.SampleRate * source.WaveFormat.Channels;
 				source = source.Skip(TimeSpan.FromMilliseconds(timetoSkip + time));
-				bytesRead = 0;
+				
 			}
 			else
 			{
 				var tempBuffer = new float[copyofOffsetSamples];
 				source = source.Skip(TimeSpan.FromMilliseconds(timetoSkip));
 
-			
 				try
 				{
 					source.Read(tempBuffer, 0, copyofOffsetSamples);
@@ -139,21 +146,16 @@ namespace SLEP.Audio
 				else
 				{
 					// for wasapi exlusive and non-exclusive mode
-					while(bytesRead > sampleCount)
+					while (bytesRead > sampleCount)
 					{
 						source.Read(buffer, 0, sampleCount);
 						bytesRead -= sampleCount;
 					}
 					source.Read(buffer, 0, bytesRead);
 				}
-				
-				_nondivisibleFlag = false;
-				//bytesRead = 0;
+
 			}
-			countMethod = 0;
-			bufferOverrideflag = false;
-			timetoSkip = 0;
-			
+
 		}
 
 		static int countMethod = 0;
@@ -164,6 +166,7 @@ namespace SLEP.Audio
 			if (fadeState == FadeState.CrossFade)
 			{
 				ExecuteWhenStateTransitionsToCrossFade(buffer, count);
+				ResetVariables();
 			}
 
 			sourceSamplesRead = source.Read(buffer, offset, count);
@@ -175,19 +178,7 @@ namespace SLEP.Audio
 				_copyofNotPlayingSammplesCapture = new float[bytes];
 			}
 
-			// gets called after the audio pointer is moved to starting of the region
-			if (copyofOffsetSamples > 0 && !bufferOverrideflag)
-			{
-				var offsetSamples = bytesRead;
-				//OverrideOffsetSamples(buffer, offsetSamples, sourceSamplesRead);
-				copyofOffsetSamples = 0;
-				bytesRead = 0;
-			}
-
-			// calculates number of samples with in the region and converts into time duration
-			_addReadSamples += sourceSamplesRead;
-			duration = (_addReadSamples / (double)source.WaveFormat.SampleRate * source.WaveFormat.Channels) * 1000.0;
-
+					
 			if (fadeOutDelaySamples > 0)
 			{
 				fadeOutDelayPosition += sourceSamplesRead / WaveFormat.Channels;
@@ -211,12 +202,7 @@ namespace SLEP.Audio
 			else if (fadeState == FadeState.FadingOut)
 			{
 				// initiates fadeout at end of the region in non-loop.
-				if (_regionStartTimeInMillis + duration >= _regionEndTimeInMillis)
-				{
-					FadeOut(buffer, offset, sourceSamplesRead);
-					_addReadSamples = 0;
-					_triStateFlag = 1;
-				}
+				FadeOut(buffer, offset, sourceSamplesRead);
 			}
 			else if (fadeState == FadeState.FadingoutOnMouseClicksAndPause)
 			{
@@ -245,9 +231,7 @@ namespace SLEP.Audio
 		/// <param name="count"></param>
 		private void ReadExtraBlocks(float [] buffer, int count)
 		{
-
 			int length = (offsetbytes > count) ? offsetbytes : count;
-
 			var temporaryArray = new float[length];
 
 			try
@@ -259,13 +243,8 @@ namespace SLEP.Audio
 			}
 			catch { }
 
-			//var sourceSamplesRead = _copyofnonplayingsourceprovider.Read(temporaryArray, 0, count);
 			var sourceSamplesRead = _copyofnonplayingsourceprovider.Read(buffer, 0, count);
-			//for (int i = 0; i < sourceSamplesRead; i++)
-			//{
-			//	buffer[i] = temporaryArray[i];
-			//}
-					
+								
 			bytesRead += sourceSamplesRead;
 			offsetbytes = 0;
 		}

@@ -16,7 +16,6 @@ namespace SLEP.Audio
 		private readonly BackgroundWorker waveformGenerateWorker = new BackgroundWorker();
 		private readonly int fftDataSize = (int)FFTDataSize.FFT2048;
 		private bool disposed;
-		private bool isPlaying;
 		private double channelLength;
 		private double channelPosition;
 		private bool inChannelSet;
@@ -27,9 +26,7 @@ namespace SLEP.Audio
 		private string pendingWaveformPath;
 		private float[] fullLevelData;
 		private float[] waveformData;
-		private TimeSpan repeatStart;
-		private TimeSpan repeatStop;
-		private bool inRepeatSet;
+				
 		#endregion
 
 		#region Constants
@@ -169,9 +166,7 @@ namespace SLEP.Audio
 
 			if (!waveformGenerateWorker.IsBusy && waveformCompressedPointCount != 0)
 				waveformGenerateWorker.RunWorkerAsync(new WaveformGenerationParams(waveformCompressedPointCount, path));
-		}
-
-		
+		}		
 
 		private void waveformGenerateWorker_DoWork(object sender, DoWorkEventArgs e)
 		{
@@ -318,14 +313,11 @@ namespace SLEP.Audio
 					NotifyPropertyChanged("ActiveStream");
 			}
 		}
-
-		
-
-
+			   		 
 		public bool IsPlaying
 		{
-			get { return isPlaying; }
-			
+			get { return false; }
+
 		}
 		#endregion
 

@@ -377,7 +377,7 @@ namespace SLEP.UIModule.Menu
 
 				return (refFileFlag & samplFileFlag);
 			}
-			catch(Exception ex)
+			catch(Exception)
 			{
 				System.Windows.Forms.MessageBox.Show("The Reading of the Session File is Failed, The file may be corrupted", "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
 				throw new Exception("The Reading of the Session File is Failed, The file may be corrupted");

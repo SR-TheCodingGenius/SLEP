@@ -138,7 +138,7 @@ namespace SLEP.UIModule.Views
 					}
 				}
 			}
-			catch (Exception ex)
+			catch (Exception )
 			{
 				System.Windows.Forms.MessageBox.Show(string.Format("The Reading of the Score File is Failed, The score file is corrupted\n\n" ), "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
 				throw new Exception("The Reading of the Score File is Failed, The file is corrupted");

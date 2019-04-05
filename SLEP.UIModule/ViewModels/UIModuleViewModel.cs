@@ -1,12 +1,10 @@
-﻿using Microsoft.Practices.Prism.ViewModel;
-
-using System.ComponentModel.Composition;
+﻿using Microsoft.Practices.Prism.Mvvm;
 using System.Windows.Input;
 
 namespace SLEP.UIModule.ViewModels
 {
-	
-	public class UIModuleViewModel : NotificationObject
+
+	public class UIModuleViewModel : BindableBase
 	{
 	
 		public UIModuleViewModel(IUIModuleController uiModuleController)
@@ -24,7 +22,7 @@ namespace SLEP.UIModule.ViewModels
 				if (showView != value)
 				{
 					showView = value;
-					RaisePropertyChanged("ShowView");
+					OnPropertyChanged("ShowView");
 				}
 			}
 		}

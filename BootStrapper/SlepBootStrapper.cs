@@ -38,8 +38,6 @@ namespace SLEP.BootStrapper
 		{
 			this.AggregateCatalog.Catalogs.Add(new AssemblyCatalog(typeof(SlepBootStrapper).Assembly));
 			this.AggregateCatalog.Catalogs.Add(new AssemblyCatalog(typeof(AutoPopulateExportedViewsBehavior).Assembly));
-			//this.AggregateCatalog.Catalogs.Add(new AssemblyCatalog(typeof(ABCTestDetailsModel).Assembly));
-
 		}
 
 		protected override IRegionBehaviorFactory ConfigureDefaultRegionBehaviors()

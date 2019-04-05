@@ -23,8 +23,6 @@ namespace SLEP.Views
 		private ABCTestDetailsModel _abcModelList;
 		private MushraTestDetailsModel _mushraModelList;
 		private double _dataGridWidth = 0.0;
-		//private bool _abcAuditionModeFlag = false;
-		//private bool _mushraAuditionModeFlag = false;
 		private int _abcAuditionModeFlag = -1;
 		private int _mushraAuditionModeFlag = -1;
 		private int _trialCount = 0;
@@ -101,7 +99,7 @@ namespace SLEP.Views
 			SessGrid.Width = _dataGridWidth;
 			var titleText = string.Format("SLEP - ABC Session ({0})", e.SessionFileName);
 			this.Title = titleText;
-			//SessGrid.SelectedIndex = 0;
+
 			_abcModelList.trials.All(trials =>
 			{
 				var trial = new TrialList();
@@ -125,8 +123,7 @@ namespace SLEP.Views
 			var trialList = new List<TrialList>();
 			var titleText = string.Format("SLEP - MUSHRA Session ({0})", e.SessionFileName);
 			this.Title = titleText;
-			//SessGrid.SelectedIndex = 0;
-          
+			          
 			_mushraModelList.trials.All(trials =>
 			{
 				var trial = new TrialList();
@@ -246,7 +243,6 @@ namespace SLEP.Views
 		private void OnViewScoreSheetClicked(object sender, RoutedEventArgs e)
 		{
 			var viewMenuObject = new ViewMenuViewObject();
-			//viewMenuObject.LoadScoreWindow();
 			viewMenuObject.ViewScoreSheet();
 		}
 

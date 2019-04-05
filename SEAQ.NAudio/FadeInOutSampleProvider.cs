@@ -83,11 +83,7 @@ namespace SLEP.Audio
 			int sourceSamplesRead = 0;
 		
 			sourceSamplesRead = source.Read(buffer, offset, count);
-			if (fadeState != FadeState.FadingOut)
-			{
-				DelayFadeOutSampleProvider._addReadSamples += sourceSamplesRead;
-			}
-
+			
 			if (fadeState == FadeState.FadingIn)
 			{
 				FadeIn(buffer, offset, sourceSamplesRead);
@@ -117,8 +113,7 @@ namespace SLEP.Audio
 			float multiplier = 0.0f;
 
 			while (sample < sourceSamplesRead)
-			{
-			
+			{			
 				if (_crossFadeInstance != null)
 				{
 					var fadeoutX = (fadeSamplePosition / (float)fadeSampleCount);
@@ -149,6 +144,7 @@ namespace SLEP.Audio
 		{
 			int sample = 0;
 			float multiplier = 0.0f;
+
 			while (sample < sourceSamplesRead)
 			{
 				if (_crossFadeInstance != null)
@@ -162,16 +158,13 @@ namespace SLEP.Audio
 				}
 				for (int ch = 0; ch < source.WaveFormat.Channels; ch++)
 				{
-					buffer[offset + sample] *= multiplier;
-					
+					buffer[offset + sample] *= multiplier;					
 					sample++;
-				}
-				
+				}				
 				fadeSamplePosition++;
-				if (fadeSamplePosition > fadeSampleCount - 1)
+				if (fadeSamplePosition >= fadeSampleCount)
 				{
 					fadeState = FadeState.FullVolume;				
-					// no need to multiply any more
 					break;
 				}
 			}

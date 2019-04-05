@@ -35,8 +35,9 @@ namespace SLEP.Audio
 				_device = new WaveOutEvent();
 				_waveStreamList = new List<WaveStream>();
 
-				_device.DesiredLatency = 100;//latency;//_device.DesiredLatency = 100;
-				_device.NumberOfBuffers = 2 ;//100 / latency ;
+				_device.DesiredLatency = latency;
+				//_device.NumberOfBuffers = 10 ;
+				
 				return true;
 			}
 			catch(Exception ex)
@@ -212,7 +213,7 @@ namespace SLEP.Audio
 		public void FadeOut(WavePlayer fadeout, double time)
 		{
 			var fadeoutObject = RemoveAddStreamsFromMixer(fadeout);
-			fadeoutObject.BeginFadeOut(2, time);
+			fadeoutObject.BeginFadeOut(1, time);
 		}
 		public void FadersInOut(WavePlayer fadeout, double time)
 		{
@@ -238,7 +239,6 @@ namespace SLEP.Audio
 			var readCount = fadeSampleCount > DelayFadeOutSampleProvider._copyofNotPlayingSammplesCapture?.Length ? fadeSampleCount :
 				DelayFadeOutSampleProvider._copyofNotPlayingSammplesCapture.Length;
 
-			//DelayFadeOutSampleProvider._copyofNotPlayingSammplesCapture = new float[2400];
 			copyofSampleProvider.Read(DelayFadeOutSampleProvider._copyofNotPlayingSammplesCapture, 0, readCount);
 
 			CopyofSampleProvider(wavePlayer, selectbegintime);

@@ -273,7 +273,7 @@ namespace SLEP.UIModule.Views
                     streamWriter.Close();
                 }
             }
-            catch(Exception e)
+            catch(Exception)
             {
 
             }

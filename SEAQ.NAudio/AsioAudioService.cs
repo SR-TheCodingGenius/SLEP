@@ -11,15 +11,13 @@ namespace SLEP.Audio
 {
 	public class AsioAudioService : IAudioService, IDisposable
 	{
-		//public event PlayStopHandle PlaybackStop;
-		public delegate void PlayStopHandle(EventArgs e);
+			public delegate void PlayStopHandle(EventArgs e);
 		private AsioOut _device;
 		public string _audioFileName { get; set; }
 		private WaveStream _waveStream;
 		private IList<WaveStream> _waveStreamList;
 		private string _asioDriverName;
 		private static IList<IWaveProvider> _inputs;
-		//private static int count = 0;
 		private MixingWaveProvider32 _mixer;
 		public AsioAudioService(string driverName)
 		{
@@ -168,7 +166,6 @@ namespace SLEP.Audio
 
 		public void FadeInOut(WavePlayer fadein, WavePlayer fadeout, int milliSeconds)
 		{
-			//DelayFadeOutSampleProvider._addReadSamples = 0;
 			var fadeInProvider = fadein._reader.ToSampleProvider();
 			var fadeOutProvider = fadeout._reader.ToSampleProvider();
 
@@ -178,8 +175,6 @@ namespace SLEP.Audio
 
 			var fadeOutObject = new FadeInOutSampleProvider(fadeOutProvider);
 			var fadeInObject = new FadeInOutSampleProvider(fadeInProvider);
-			//var fadeOutObject = new DelayFadeOutSampleProvider(fadeOutProvider);
-			//var fadeInObject = new DelayFadeOutSampleProvider(fadeInProvider);
 
 			var waveStream = new WaveProviderToWaveStream(fadeOutObject.ToWaveProvider());
 			var waveStream2 = new WaveProviderToWaveStream(fadeInObject.ToWaveProvider());
@@ -190,7 +185,6 @@ namespace SLEP.Audio
 			_mixer.AddInputStream(fadeout._channels);
 			_mixer.AddInputStream(fadein._channels);
 
-			//fadeOutObject.BeginFadeOut(0, milliSeconds);
 			fadeOutObject.BeginFadeOut(milliSeconds);
 			fadeInObject.BeginFadeIn(milliSeconds);
 

@@ -183,14 +183,10 @@ namespace SLEP.UIModule.Views
 			_sessCreatedFlag = false;
 			StartText.Clear();
 			StopText.Clear();
-
-
-
 		}
 		private void OnLoadSelectedTrialEvent(object sender, int selectedTrial)
 		{
 			_sessionIndex = selectedTrial;
-
 			ResetForNextTrial();
 			DisposeAudioComponents();
 			AddScore?.Invoke(sender, _testModeFlag);
@@ -275,7 +271,7 @@ namespace SLEP.UIModule.Views
 			{
 				if (_settingsObject.Latency < 100)
 				{
-					latency = _settingsObject.Latency * _settingsObject.NumberOfBuffers;
+					latency = _settingsObject.Latency * 10;// * _settingsObject.NumberOfBuffers;
 				}
 				else
 				{
@@ -349,6 +345,15 @@ namespace SLEP.UIModule.Views
 					StartText.Text = currentTimeStamp;
 				}
 
+				if(!_isPlaying)
+				{
+					if (_audioObject.GetPlayBackState() == PlayBackState.Playing)
+					{
+						_audioObject.StopAudio();
+						_microTimer.Stop();
+					}
+				}
+
 				if (_isPlaying)
 				{
 					_waveDisplay.ChannelPosition = currenttime.TotalSeconds;
@@ -357,28 +362,21 @@ namespace SLEP.UIModule.Views
 
 				PlayInSelectedRegion();
 
-				if (_loopFalg == false && SelectBegin <= 0)
-				{
-					ResetAtMaximum();
-				}
+				//if (_loopFalg == false && SelectBegin <= 0)
+				//{
+				//	ResetAtMaximum();
+				//}
 
 				StlimusSwitcher();
 			});
 
 		}
-		bool _regionChangedFlag = false;
+		
 		private void SetSelections()
 		{
 			if (_isCanvasCleared)
 				return;
-			if (Math.Abs(SelectBegin - (float)_waveDisplay.SelectionBegin.TotalSeconds) > 0.0 || Math.Abs(SelectEnd - (float)_waveDisplay.SelectionEnd.TotalSeconds) > 0.0)
-			{
-				_regionChangedFlag = true;
-			}
-			else
-			{
-				_regionChangedFlag = false;
-			}
+		
 			if (IsRegionExists)
 			{
 				SelectEnd = (float)_waveDisplay.SelectionEnd.TotalSeconds;
@@ -424,27 +422,22 @@ namespace SLEP.UIModule.Views
 				{
 					if (_loopFalg)
 					{
-						_audioObject.SetCurrentTime(TimeSpan.FromSeconds(SelectBegin));
-						_waveDisplay.ChannelPosition = SelectBegin;
 						_audioObject.CrossFadeAtEnds(_doAudioOperations[_current]);
+						_audioObject.SetCurrentTime(TimeSpan.FromSeconds(SelectBegin));
+						_waveDisplay.ChannelPosition = SelectBegin;						
 						_audioObject.CopyofSampleProvider(_newlistOfWavePlayers[_current], SelectBegin);
 						_fadeinFlag = true;
 					}
 
 					if (!_loopFalg)
 					{
-						_microTimer.Stop();
 						PlayEnabled(true);
 						_fadeoutFlag = true;
-						Thread.Sleep(500);
-						_audioObject.StopAudio();
 						var timeStamp = _waveDisplay.SelectionBegin;
 						var timeStamptext = timeStamp.Minutes + ":" + timeStamp.Seconds + ":" + timeStamp.Milliseconds;
 						StartText.Text = timeStamptext;
 						_waveDisplay.ChannelPosition = _waveDisplay.SelectionBegin.TotalSeconds;
-						DelayFadeOutSampleProvider._triStateFlag = 0;
 						_isPlaying = false;
-
 					}
 				}
 				else
@@ -456,7 +449,6 @@ namespace SLEP.UIModule.Views
 
 		private void FadeOutAtTheEndOfRegions(double fadeOutTime)
 		{
-
 			if (_loopFalg)
 			{
 				if (fadeOutTime <= 101.0)
@@ -575,7 +567,7 @@ namespace SLEP.UIModule.Views
 
 			HighlightPlayingAudio(buttonClicked);
 			//SetSelections();
-
+			
 			if (!_isPlaying)
 			{
 				_current = buttonClicked;
@@ -595,9 +587,11 @@ namespace SLEP.UIModule.Views
 						_cFlag = true;
 					}
 				}
-
+				
 				_audioObject.FadeIn(_doAudioOperations[_current], 10);
 				_fadeinFlag = true;
+
+				_doAudioOperations.All(audioChannels => { audioChannels.SetVolumeStream(0); return true; });
 				_doAudioOperations[_current].SetVolumeStream(1);
 
 				if (_audioObject != null && ((_audioObject.GetPlayBackState() == PlayBackState.Stopped) || (_audioObject.GetPlayBackState() == PlayBackState.Paused)))
@@ -958,24 +952,16 @@ namespace SLEP.UIModule.Views
 
 		private void OnLeftButtonUp(object sender, RoutedEventArgs e)
 		{
-
 			SetSelections();
 			if (_isPlaying)
 			{
-
-
 				_audioObject.FadeoutOnMouseClicksAndPause(_doAudioOperations[_current], 10);
 				Thread.Sleep(150);
 				if (_audioObject != null)
 				{
 					_audioObject.SetCurrentTime(TimeSpan.FromSeconds(_waveDisplay.ChannelPosition));
-					//_audioObject.CopyofSampleProvider(_newlistOfWavePlayers[_current], SelectBegin, SelectEnd, _settingsObject.CrossfadeTime);
-					//	if (!_loopFalg)
-					{
-						_audioObject.UpdateSelectionTimesonMouseClicks((float)_waveDisplay.ChannelPosition, SelectEnd);
-					}
+					_audioObject.UpdateSelectionTimesonMouseClicks((float)_waveDisplay.ChannelPosition, SelectEnd);
 					_audioObject.FadeIn(_doAudioOperations[_current], 10);
-					//_mouseClicked = true;
 				}
 			}
 

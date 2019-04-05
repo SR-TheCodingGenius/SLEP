@@ -873,12 +873,13 @@ namespace SLEP.WaveDisplay
 				{
 					double position = (currentPoint.X / RenderSize.Width) * soundPlayer.ChannelLength;
 					soundPlayer.ChannelPosition = Math.Min(soundPlayer.ChannelLength, Math.Max(0, position));
+					updateRepeatRegion = false;
 				}
 				else
 				{
 					soundPlayer.SelectionBegin = TimeSpan.Zero;
 					soundPlayer.SelectionEnd = TimeSpan.Zero;
-					
+
 					double position = (currentPoint.X / RenderSize.Width) * soundPlayer.ChannelLength;
 					soundPlayer.ChannelPosition = Math.Min(soundPlayer.ChannelLength, Math.Max(0, position));
 					startLoopRegion = -1;
@@ -888,12 +889,12 @@ namespace SLEP.WaveDisplay
 			}
 			else
 			{
-			
+
 				soundPlayer.SelectionBegin = TimeSpan.FromSeconds(startLoopRegion);
-					soundPlayer.SelectionEnd = TimeSpan.FromSeconds(endLoopRegion);
-					double position = startLoopRegion;
-					soundPlayer.ChannelPosition = Math.Min(soundPlayer.ChannelLength, Math.Max(0, position));
-					updateRepeatRegion = true;
+				soundPlayer.SelectionEnd = TimeSpan.FromSeconds(endLoopRegion);
+				double position = startLoopRegion;
+				soundPlayer.ChannelPosition = Math.Min(soundPlayer.ChannelLength, Math.Max(0, position));
+				updateRepeatRegion = true;
 			}
 
 			if (updateRepeatRegion)
@@ -927,11 +928,6 @@ namespace SLEP.WaveDisplay
 						startLoopRegion = (currentPoint.X / RenderSize.Width) * soundPlayer.ChannelLength;
 						endLoopRegion = (mouseDownPoint.X / RenderSize.Width) * soundPlayer.ChannelLength;
 					}
-				}
-				else
-				{
-					startLoopRegion = -1;
-					endLoopRegion = -1;
 				}
 				UpdateRepeatRegion();
 			}
@@ -1005,7 +1001,6 @@ namespace SLEP.WaveDisplay
 		{
 			UpdateRepeatRegion();
 			CreateProgressIndicator();
-			//UpdateTimeline();
 			UpdateWaveform();
 		}
 
@@ -1035,130 +1030,7 @@ namespace SLEP.WaveDisplay
 			repeatRegion.Height = repeatCanvas.RenderSize.Height;
 		}
 
-		private void UpdateTimeline()
-		{
-			if (soundPlayer == null || timelineCanvas == null)
-			{
-				
-				return;
-			}
-
-			foreach (TextBlock textblock in timestampTextBlocks)
-			{
-				timelineCanvas.Children.Remove(textblock);
-			}
-			timestampTextBlocks.Clear();
-
-			foreach (Line line in timeLineTicks)
-			{
-				timelineCanvas.Children.Remove(line);
-			}
-			timeLineTicks.Clear();
-
-			double bottomLoc = timelineCanvas.RenderSize.Height - 1;
-
-			timelineBackgroundRegion.Width = timelineCanvas.RenderSize.Width;
-			timelineBackgroundRegion.Height = timelineCanvas.RenderSize.Height;
-
-			double minorTickDuration = 1.00d; // Major tick = 5 seconds, Minor tick = 1.00 second
-			double majorTickDuration = 5.00d;
-			if (soundPlayer.ChannelLength >= 120.0d) // Major tick = 1 minute, Minor tick = 15 seconds.
-			{
-				minorTickDuration = 15.0d;
-				majorTickDuration = 60.0d;
-			}
-			else if (soundPlayer.ChannelLength >= 60.0d) // Major tick = 30 seconds, Minor tick = 5.0 seconds.
-			{
-				minorTickDuration = 5.0d;
-				majorTickDuration = 30.0d;
-			}
-			else if (soundPlayer.ChannelLength >= 30.0d) // Major tick = 10 seconds, Minor tick = 2.0 seconds.
-			{
-				minorTickDuration = 2.0d;
-				majorTickDuration = 10.0d;
-			}
-
-			if (soundPlayer.ChannelLength < minorTickDuration)
-				return;
-
-			int minorTickCount = (int)(soundPlayer.ChannelLength / minorTickDuration);
-			for (int i = 0; i <= minorTickCount; i++)
-			{
-				Line timelineTick = new Line()
-				{
-					Stroke = TimelineTickBrush,
-					StrokeThickness = 1.0d
-				};
-			//	if (i != 0) // Draw Large Ticks and Timestamps at minute marks
-			//	{
-					double xLocation = ((i * minorTickDuration) / soundPlayer.ChannelLength) * timelineCanvas.RenderSize.Width;
-
-					bool drawTextBlock = false;
-					double lastTimestampEnd;
-					if (timestampTextBlocks.Count != 0)
-					{
-						TextBlock lastTextBlock = timestampTextBlocks[timestampTextBlocks.Count - 1];
-						lastTimestampEnd = lastTextBlock.Margin.Left + lastTextBlock.ActualWidth;
-					}
-					else
-						lastTimestampEnd = 0;
-
-					if (xLocation > lastTimestampEnd + timeStampMargin)
-						drawTextBlock = true;
-
-					// Flag that we're at the end of the timeline such 
-					// that there is not enough room for the text to draw.
-					bool isAtEndOfTimeline = (timelineCanvas.RenderSize.Width - xLocation < 28.0d);
-
-					if (drawTextBlock)
-					{
-						timelineTick.X1 = xLocation;
-						timelineTick.Y1 = bottomLoc;
-						timelineTick.X2 = xLocation;
-						timelineTick.Y2 = bottomLoc - majorTickHeight;
-
-						if (isAtEndOfTimeline)
-							continue;
-
-						TimeSpan timeSpan = TimeSpan.FromSeconds(i * minorTickDuration);
-						TextBlock timestampText = new TextBlock()
-						{
-							Margin = new Thickness(xLocation + 2, 0, 0, 0),
-							FontFamily = this.FontFamily,
-							FontStyle = this.FontStyle,
-							FontWeight = this.FontWeight,
-							FontStretch = this.FontStretch,
-							FontSize = this.FontSize,
-							Foreground = this.Foreground,
-							Text = (timeSpan.TotalHours >= 1.0d) ? string.Format(@"{0:hh\:mm\:ss}", timeSpan) : string.Format(@"{0:mm\:ss}", timeSpan)
-						};
-
-                        timestampText.Foreground = new SolidColorBrush(Colors.SpringGreen );
-                        
-						//timestampTextBlocks.Add(timestampText);
-						//timelineCanvas.Children.Add(timestampText);
-						UpdateLayout(); // Needed so that we know the width of the textblock.
-					}
-					else // If still on the text block, draw a minor tick mark instead of a major.
-					{
-						timelineTick.X1 = xLocation;
-						timelineTick.Y1 = bottomLoc;
-						timelineTick.X2 = xLocation;
-						timelineTick.Y2 = bottomLoc - minorTickHeight;
-					}
-				//}
-				//else // Draw small ticks
-				//{
-				//	double xLocation = ((i * minorTickDuration) / soundPlayer.ChannelLength) * timelineCanvas.RenderSize.Width;
-				//	timelineTick.X1 = xLocation;
-				//	timelineTick.Y1 = bottomLoc;
-				//	timelineTick.X2 = xLocation;
-				//	timelineTick.Y2 = bottomLoc - minorTickHeight;
-				//}
-				timeLineTicks.Add(timelineTick);
-				timelineCanvas.Children.Add(timelineTick);
-			}
-		}
+		
 
 		private void CreateProgressIndicator()
 		{

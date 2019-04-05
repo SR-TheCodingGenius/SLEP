@@ -1,7 +1,4 @@
-﻿using SLEP.Logger;
-using System;
-using System.Collections.Generic;
-using System.Threading;
+﻿using System;
 
 namespace SLEP.CrossFadeAlgo
 {
